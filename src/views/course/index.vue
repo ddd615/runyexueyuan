@@ -6,7 +6,7 @@
           v-model="keyword"
           input-align="center"
           shape="round"
-
+          @search="onSearch"
         >
           <div slot="left-icon" class="search-icon">
             <img src="../../assets/images/search.png" alt="" v-if="isInput">
@@ -99,6 +99,15 @@
             this.courseList = [];
             this.getCourseByParentId();
 
+        },
+        onSearch(){
+            this.$get('/course/listCourseName?name='+this.keyword+'&pageNum=1&pageSize=99',
+              {
+              },
+              res => {
+              this.courseList = res.data.data.list;
+              }
+            )
         }
       }
     }

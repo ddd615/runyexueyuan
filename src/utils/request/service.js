@@ -41,17 +41,18 @@ service.interceptors.request.use(
     let method = config.method;
 
     if (store.state.user.accessToken) {
-      config.headers['Access-Token'] = store.state.user.accessToken;
+      config.headers['accessToken'] = store.state.user.accessToken;
 
     } else {
       let user = localStorage.getItem('runye_user');
       console.log('我是axios'+user);
       if (user){
-        config.headers['Access-Token'] = JSON.parse(user).accessToken;
+        config.headers['accessToken'] = JSON.parse(user).accessToken;
       }
 
     }
-    if (method === 'post') {
+    let url = config.url
+    if (method === 'post' && url !== '/member/update') {
       let keys = Object.keys(config.data);
       let formData = new FormData();
       for (let i = 0, len = keys.length; i < len; i++) {

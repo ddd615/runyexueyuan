@@ -74,7 +74,22 @@
         name: "myCourse",
       data(){
           return{
-            active:0
+            active:0,
+            pageNum:1,
+            pageSize:10,
+
+          }
+      },
+      created(){
+        this.getMyCourse();
+      },
+      methods:{
+          getMyCourse(){
+            let user = JSON.parse(localStorage.getItem('runye_user'))
+            this.$get(`/registration/list?memberId=${user.memberId}&pageNum=${this.pageNum}&pageSize=${this.pageSize}&isRescheduling=${this.active}`,
+              {},res => {
+
+            })
           }
       }
     }

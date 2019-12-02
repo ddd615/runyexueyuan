@@ -1,16 +1,13 @@
 <template>
     <div class="inform">
-      <div class="inform-card">
+      <div class="inform-card" v-for="(item,index) in informList">
         <div class="card-header">
           <img src="../../assets/images/通知.png" alt="">
-          <span>开课通知</span>
+          <span>{{item.title}}</span>
           <div class="red-point"></div>
         </div>
         <p class="card-content">
-          我院现有课室可供各类企业、机构作为培训场所，在与
-          本院课程时间安排不冲突的情况下，愿租赁课室给各类机构
-          作为合法培训的教学场所，欢迎致电您报名的《学霸课程》
-          课程一个月后开课。
+          {{item.content}}
         </p>
         <div class="card-footer">
           <p>2019/12/12   17:00</p>
@@ -35,16 +32,16 @@
       },
       methods:{
           getInform(){
-            this.$get('/noticeMember/list',
+            let user = JSON.parse(localStorage.getItem('runye_user'));
+            this.$get(`/notice/list?memberId=${user.memberId}&pageNum=${this.pageNum}&pageSize=${this.pageSize}`,
               {
-                pageNum: this.pageNum,
-                pageSize: this.pageSize,
               },
               res => {
               this.informList = res.data.data.list;
               }
             )
-          }
+          },
+
       }
     }
 </script>

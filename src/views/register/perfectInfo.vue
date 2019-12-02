@@ -61,6 +61,7 @@
       },
       methods:{
         save(){
+          let user = JSON.parse(localStorage.getItem('runye_user'))
           this.$post(
             '/member/update',
             {
@@ -69,12 +70,37 @@
               name:this.name,
               mobile:this.mobile,
               mailbox:this.mailbox,
-              accessToken:this.accessToken
+              id:user.memberId,
+              "address": "",
+              "age": 0,
+              "certificateId": "",
+              "courseId": 0,
+              "courseName": "",
+              "courseNumberId": 0,
+              "educationId": 0,
+              "educationName": "",
+              "identity": "",
+              "isInside": "",
+              "mainPic": "",
+              "major": "",
+              "nativePlace": "",
+              "openId": "",
+              "otherInfo": "",
+              "password": "",
+              "receipt": 0,
+              "remark": "",
+              "sex": 0,
+              "shool": "",
+              "tagIds": "",
+              "tagNames": "",
+              "typeId": 0,
+              "typeName": "",
+              "username": "",
+              "zhouqi": ""
             },
             res => {
-              if (res.data.msg === '执行成功') {
-
-              }
+              this.$toast('保存成功');
+              this.$router.replace({path:'/home'});
             }
             )
         }

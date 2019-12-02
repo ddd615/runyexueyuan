@@ -38,7 +38,7 @@
 
         </van-tab>
       </van-tabs>
-      <van-button type="danger" size="large" to="/course/enrollMsg">立即报名</van-button>
+      <van-button type="danger" size="large" :to="{path:'/course/enrollMsg',query:{id:$route.params.id}}">立即报名</van-button>
     </div>
 </template>
 
