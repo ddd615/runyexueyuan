@@ -48,8 +48,8 @@
         <van-cell title="电子照片（白底彩照）：">
           <template>
             <van-uploader :after-read="afterRead">
-              <img :src="userInfo.mainPic" alt="" v-if="userInfo.mainPic" width="86" height="78">
-              <img src="../../assets/images/add_photo.png" alt=""  v-else>
+              <img src="../../assets/images/add_photo.png" alt="" v-if="!hasPic">
+              <img :src="userInfo.mainPic" alt="" v-else width="86" height="78">
             </van-uploader>
           </template>
         </van-cell>
@@ -104,16 +104,37 @@
             identityTypePicker: false,
             identityTypeList: ['身份证', '港澳通行证', '军官证'],
             educationPicker:false,
-            educationList:['初中','高中','大专','本科','硕士','博士']
+            educationList:['初中','高中','大专','本科','硕士','博士'],
+            hasPic:false
           }
       },
       created(){
         let user =JSON.parse(localStorage.getItem('runye_user'))
         this.getDetail();
       },
+      filters:{
+        showSex(val){
+          let sex = '';
+          if(val == 1) {
+            sex = '男'
+          } else if (val == 2) {
+            sex = '女'
+          } else {
+            sex = ''
+          }
+          return sex;
+        }
+      },
       methods:{
         onSexSelect(val){
-          this.userInfo.sex = val;
+
+
+          if (val === '男') {
+            this.userInfo.sex = 1;
+          } else {
+            this.userInfo.sex = 2;
+          }
+
           this.sexPicker = false;
         },
         onTypeSelect(val){
@@ -131,6 +152,17 @@
           let user = JSON.parse(localStorage.getItem('runye_user'));
           this.$get('/member/info/'+user.memberId,{},res => {
             this.userInfo = res.data.data;
+            // this.userInfo.id = userInfo.id;
+            // this.userInfo.name = userInfo.name || '';
+            // this.userInfo.sex = userInfo.sex || '';
+            // this.userInfo.typeId = userInfo.typeId;
+            // this.userInfo.identity = userInfo.identity || '';
+            // this.userInfo.educationId = userInfo.educationId;
+            // this.userInfo.major = userInfo.major;
+            // this.userInfo.mailbox = userInfo.mailbox;
+            // this.userInfo.mainPic = userInfo.mainPic || true;
+            // this.userInfo.otherInfo = userInfo.otherInfo;
+
             console.log(this.userInfo);
           })
         },
@@ -156,10 +188,13 @@
           console.log(file);
           let param = new FormData();
           param.append('file',file.file);
-          // this.$post('/file/ueditor',param,res => {
-          //
-          // })
-          this.userInfo.mainPic = file.content;
+          this.$post('/file/upload',param,res => {
+            console.log(res.data.data);
+            this.userInfo.mainPic = res.data.data;
+            console.log(this.userInfo)
+            this.hasPic = true;
+          })
+          // this.userInfo.mainPic = file.content;
         },
         submit(){
           let user = JSON.parse(localStorage.getItem('runye_user'));
@@ -170,14 +205,14 @@
               {
                 courseId:this.$route.query.id,
                 memberId:user.memberId,
-                receipt:0,
               },
               res => {
 
               }
             )
           })
-        }
+        },
+
       }
     }
 </script>

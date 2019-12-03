@@ -26,3 +26,12 @@ export const get = (url, param, callback) => {
     store.commit('hideLoading')
   });
 };
+export function postWithConfig(url, param, config, callback) {
+  store.commit('showLoading');
+  service.post(url, param, config).then(data => {
+
+      callback(data);
+      store.commit('hideLoading')
+
+  })
+}

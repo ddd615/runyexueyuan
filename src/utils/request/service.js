@@ -38,6 +38,7 @@ service.interceptors.request.use(
   config => {
     // 判断是否存在token，如果存在的话，则每个http header都加上Access-Token
     // console.log(store.state.user)
+
     let method = config.method;
 
     if (store.state.user.accessToken) {
@@ -51,8 +52,11 @@ service.interceptors.request.use(
       }
 
     }
-    let url = config.url
-    if (method === 'post' && url !== '/member/update') {
+    let url = config.url;
+    if (url === '/outer/forgetPassword') {
+      config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+    }
+    if (method === 'post' && url !== '/member/update' && url !== '/file/upload') {
       let keys = Object.keys(config.data);
       let formData = new FormData();
       for (let i = 0, len = keys.length; i < len; i++) {
@@ -80,6 +84,7 @@ service.interceptors.response.use(
       return response;
     }else {
       Toast(response.data.msg);
+      return ;
     }
     // if (response.data) {
     //   switch (response.data.code) {
