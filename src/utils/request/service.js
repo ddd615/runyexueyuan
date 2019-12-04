@@ -53,10 +53,8 @@ service.interceptors.request.use(
 
     }
     let url = config.url;
-    if (url === '/outer/forgetPassword') {
-      config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
-    }
-    if (method === 'post' && url !== '/member/update' && url !== '/file/upload') {
+    if (method === 'post' && url !== '/member/update' && url !== '/file/upload' && url !== '/outer/forgetPassword'
+    && url !== '/registration/save') {
       let keys = Object.keys(config.data);
       let formData = new FormData();
       for (let i = 0, len = keys.length; i < len; i++) {

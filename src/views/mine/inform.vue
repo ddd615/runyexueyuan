@@ -6,8 +6,8 @@
           <span>{{item.title}}</span>
           <div class="red-point"></div>
         </div>
-        <p class="card-content">
-          {{item.content}}
+        <p class="card-content" v-html="item.content">
+
         </p>
         <div class="card-footer">
           <p>2019/12/12   17:00</p>
@@ -33,7 +33,7 @@
       methods:{
           getInform(){
             let user = JSON.parse(localStorage.getItem('runye_user'));
-            this.$get(`/notice/list?memberId=${user.memberId}&pageNum=${this.pageNum}&pageSize=${this.pageSize}`,
+            this.$get(`/notice/list?memberId=1&pageNum=${this.pageNum}&pageSize=${this.pageSize}`,
               {
               },
               res => {
@@ -81,6 +81,9 @@
         padding: 8px 12px;
         font-size: 12px;
         line-height: 20px;
+        /deep/ img {
+          max-width: 100%;
+        }
       }
       .card-footer{
         display: flex;

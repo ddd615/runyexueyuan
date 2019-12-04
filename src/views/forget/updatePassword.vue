@@ -96,19 +96,12 @@
         return;
       } else {
 
-        postWithConfig(
+        this.$post(
             '/outer/forgetPassword',
             {
-              moblie:this.phone,
+              mobile:this.phone,
               password:this.password,
               captcha:this.phoneCode
-            },
-            {
-
-              headers :{
-                'Content-Type':'application/x-www-form-urlencoded'
-              }
-
             },
             res => {
               this.$toast('修改成功');

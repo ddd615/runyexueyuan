@@ -50,6 +50,18 @@
       </van-cell>
       <van-cell>
         <template slot="title">
+          <img src="../../../assets/images/wdtz.png" alt="">
+          <span>我的徽章</span>
+        </template>
+        <template>
+          <div @click="toPage('/mine/myBadge')">
+            <span>更多</span>
+            <img src="../../../assets/images/arrow.png" alt="">
+          </div>
+        </template>
+      </van-cell>
+      <van-cell>
+        <template slot="title">
           <img src="../../../assets/images/qjzl.png" alt="">
           <span>前进之路</span>
         </template>

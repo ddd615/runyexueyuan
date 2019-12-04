@@ -207,7 +207,7 @@
                 memberId:user.memberId,
               },
               res => {
-
+              this.$router.go(-1);
               }
             )
           })

@@ -115,6 +115,14 @@ const routes = [
     component: ()=>import('@/views/mine/inform.vue')
   },
   {
+    path:'/mine/myBadge',
+    name:'myBadge',
+    meta:{
+      title:'我的徽章',
+    },
+    component: ()=>import('@/views/mine/myBadge.vue')
+  },
+  {
     path:'/mine/honorWall',
     name:'honorWall',
     meta:{

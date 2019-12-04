@@ -1,15 +1,24 @@
 <template>
     <div class="nav">
       <div class="avatar">
-        <img src="../../../assets/images/avatar.png" alt="">
-        <p>细</p>
+        <img :src="userInfo.mainPic" alt="">
+        <p>{{userInfo.nickname}}</p>
       </div>
     </div>
 </template>
 
 <script>
     export default {
-        name: "nav"
+        name: "nav",
+      data(){
+          return{
+            userInfo:{}
+          }
+      },
+      created() {
+          this.userInfo = JSON.parse(localStorage.getItem('runye_user'));
+
+      }
     }
 </script>
 
@@ -27,6 +36,7 @@
        img{
          width: 48px;
          height: 48px;
+         border-radius: 24px;
        }
        p{
          color: #ffffff;
@@ -49,6 +59,7 @@
        img{
          width: 56px;
          height: 56px;
+         border-radius: 30px;
        }
        p{
          color: #ffffff;
