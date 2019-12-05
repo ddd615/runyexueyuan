@@ -14,20 +14,20 @@
           <van-col span="4">成绩</van-col>
           <van-col span="4">状态</van-col>
         </van-row>
-        <van-row class="table-content">
-          <van-col span="6">课程1</van-col>
-          <van-col span="6">2019</van-col>
+        <van-row class="table-content" v-for="item in gradeList">
+          <van-col span="6">{{item.courseName}}</van-col>
+          <van-col span="6">{{item.testTime}}</van-col>
           <van-col span="4" tag="ul">
-              <li>1</li>
+              <li>{{item.subject}}</li>
               <li>2</li>
               <li>3</li>
           </van-col>
           <van-col span="4" tag="ul">
-            <li>1</li>
+            <li>{{item.score}}</li>
             <li>2</li>
             <li>3</li>
           </van-col>
-          <van-col span="4">状态</van-col>
+          <van-col span="4">{{item.isQualified === 0 ? '通过':'不通过'}}</van-col>
         </van-row>
         <van-row style="height: 10px;background: #F2F2F2"></van-row>
         <van-row class="explain">
@@ -43,12 +43,19 @@
         name: "achievement",
       data(){
           return{
-            isCheck:false
+            isCheck:false,
+            gradeList:[]
           }
       },
       methods:{
         find(){
           this.isCheck = true;
+          this.$get(`/grade/list?memberName=张三&identity=411329200004291600&pageNum=1&pageSize=10`,{},res => {
+            if (res) {
+              this.gradeList = res.data.data.list;
+            }
+          })
+
         }
       }
     }

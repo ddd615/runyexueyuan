@@ -158,9 +158,46 @@
         </van-popup>
       </van-tab>
       <van-tab title="个人证书">
-        <van-cell-group>
-          <van-cell :title="item.name" v-for="item in certificateList"/>
-        </van-cell-group>
+        <div class="certificate" v-if="!isEdit">
+          <van-cell-group>
+            <van-cell :title="item.name" v-for="item in certificateList"/>
+          </van-cell-group>
+          <div class="no-certificate">
+            <img src="../../assets/images/mine_zs.png" alt="">
+            <p>没有证书哦</p>
+          </div>
+          <van-button type="primary" icon="plus" @click="isEdit = true">添加证书</van-button>
+        </div>
+        <div v-if="isEdit">
+          <van-cell-group>
+            <van-field
+              v-model="value"
+              label="证书名称："
+              input-align="right"
+            />
+            <van-cell title="证书上传：">
+              <template slot="default">
+                <van-uploader :after-read="afterRead">
+                  <img src="../../assets/images/add_photo.png" alt="">
+                </van-uploader>
+              </template>
+            </van-cell>
+            <van-field
+              v-model="value"
+              label="证书有效期："
+              input-align="right"
+            />
+            <van-field
+              v-model="value"
+              label="到期提醒："
+              input-align="right"
+            />
+          </van-cell-group>
+          <div class="bottom-button">
+            <van-button type="primary"  @click="save">保存</van-button>
+            <van-button type="info"  @click="edit">修改</van-button>
+          </div>
+        </div>
       </van-tab>
     </van-tabs>
   </div>
@@ -194,7 +231,8 @@
             educationPicker:false,
             educationList:['初中','高中','大专','本科','硕士','博士'],
             hasPic:false,
-            identityType:''
+            identityType:'',
+            isEdit:false
           }
       },
       created(){
@@ -203,10 +241,9 @@
       },
       methods:{
           getCertificate(){
-            this.$get('/certificate/list',
+            let user = JSON.parse(localStorage.getItem('runye_user'));
+            this.$get(`/certificate/list?pageNum=${this.pageNum}&pageSize=10&memberId=${user.memberId}`,
               {
-                pageNum:this.pageNum,
-                pageSize:10
               },
               res => {
               this.certificateList = res.data.data.list;
@@ -333,6 +370,9 @@
           })
           // this.userInfo.mainPic = file.content;
         },
+        afterRead(file){
+
+        }
       }
     }
 </script>
@@ -351,6 +391,8 @@
   .person/deep/.van-tabs__wrap {
     height: 50px;
     border-bottom: 1px solid #99999926;
+    background: #ffffff;
+    padding: 0 20px;
   }
   .person/deep/.van-tab{
     line-height: 50px;
@@ -367,6 +409,26 @@
       background-color: #fff;
       border: none;
       color: #333333;
+    }
+  }
+  .certificate{
+    text-align: center;
+    .no-certificate{
+      text-align: center;
+      padding-top: 100px;
+      >p{
+        font-size: 14px;
+        color: #888888;
+        margin-top: 10px;
+      }
+    }
+    .van-button--primary{
+      width: 70%;
+      border-radius: 10px;
+      margin-top: 26px;
+      .van-button__text{
+        font-size: 16px;
+      }
     }
   }
 </style>

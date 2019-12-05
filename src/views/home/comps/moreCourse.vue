@@ -7,6 +7,12 @@
       </div>
       <img src="../../../assets/images/arrow_right.png" alt="">
     </div>
+    <van-list
+      v-model="loading"
+      :finished="finished"
+      finished-text="没有更多了"
+      @load="onLoad"
+    >
     <router-link  tag="div" :to="'/course/detail/'+item.id" class="course-list" v-for="item in courseList">
       <img :src="item.mainPic" alt="">
       <div class="course-msg">
@@ -14,6 +20,7 @@
         <p>编号：{{item.id}}</p>
       </div>
     </router-link>
+    </van-list>
   </div>
 </template>
 
@@ -25,22 +32,27 @@
         courseList:[],
         pageSize:10,
         pageNum:1,
+        loading:false,
+        finished:false,
       }
     },
     created() {
-      this.getCourse();
+
     },
     methods:{
       getCourse(){
-        this.$get('/course/list',
+        this.$get(`/course/list?pageNum=${this.pageNum}&pageSize=${this.pageSize}`,
           {
-            pageNum:this.pageNum,
-            pageSize: this.pageSize
+
           },
           res => {
+          this.pageNum++;
           this.courseList = res.data.data.gengduo;
           }
         )
+      },
+      onLoad(){
+        this.getCourse();
       }
     }
   }

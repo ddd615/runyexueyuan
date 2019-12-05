@@ -14,7 +14,8 @@ const routes = [
     path: '/login',
     name: 'login',
     meta:{
-      title:'首页'
+      title:'首页',
+      isAuthority:true
     },
     component: ()=>import('@/views/Login.vue')
   },
@@ -22,7 +23,8 @@ const routes = [
     path:'/perfectInfo',
     name:'perfectInfo',
     meta:{
-      title:'完善资料'
+      title:'完善资料',
+      isAuthority:true
     },
     component: ()=>import('@/views/register/perfectInfo.vue')
   },
@@ -30,7 +32,8 @@ const routes = [
     path:'/updatePassword',
     name:'updatePassword',
     meta:{
-      title:'修改密码'
+      title:'修改密码',
+      isAuthority:true
     },
     component: ()=>import('@/views/forget/updatePassword.vue')
   },
@@ -115,6 +118,14 @@ const routes = [
     component: ()=>import('@/views/mine/inform.vue')
   },
   {
+    path:'/mine/informShow',
+    name:'informShow',
+    meta:{
+      title:'我的通知',
+    },
+    component: ()=>import('@/views/mine/informShow.vue')
+  },
+  {
     path:'/mine/myBadge',
     name:'myBadge',
     meta:{
@@ -151,8 +162,13 @@ router.beforeEach((to,from,next)=>{
   window.scrollTo(0,0);
 
   window.document.title = to.meta.title || "闰业";
+  let user = localStorage.getItem('runye_user')
+  if (!to.meta.isAuthority && !user) {
+    next({path:'/login'})
+  } else {
+    next()
+  }
 
-  next()
 });
 
 export default router

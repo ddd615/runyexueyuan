@@ -75,6 +75,12 @@ export default {
       captcha: ''
     }
   },
+  created(){
+    let user = localStorage.getItem('runye_user');
+    if (user){
+      this.$router.replace({path:'/home'});
+    }
+  },
   methods:{
     sendCode(){
       if(this.registerPhone==''){
@@ -115,46 +121,60 @@ export default {
       this.$router.push({path:'/updatePassword'})
     },
     register(){
-      this.$post(
-        '/outer/register',
-        {
-          mobile:this.registerPhone,
-          password:this.registerPassword,
-          captcha:this.phoneCode
-        },
-        res => {
-          if (res.data.msg === '执行成功') {
-            let user =  res.data.data;
-            this.$store.commit('SAVE_ITEM',{
-              user:user
-            });
-            localStorage.setItem('runye_user',JSON.stringify(user));
-            this.$toast('注册成功');
-            this.$router.push({path:'/perfectInfo'})
+      if (!this.registerPhone){
+        this.$toast('手机号不能为空');
+      } else if (!this.registerPassword) {
+        this.$toast('密码不能为空');
+      } else if (!this.phoneCode) {
+        this.$toast('验证码不能为空');
+      } else {
+        this.$post(
+          '/outer/register',
+          {
+            mobile:this.registerPhone,
+            password:this.registerPassword,
+            captcha:this.phoneCode
+          },
+          res => {
+            if (res.data.msg === '执行成功') {
+              let user =  res.data.data;
+              this.$store.commit('SAVE_ITEM',{
+                user:user
+              });
+              localStorage.setItem('runye_user',JSON.stringify(user));
+              this.$toast('注册成功');
+              this.$router.push({path:'/perfectInfo'})
+            }
           }
-        }
-      )
+        )
+      }
 
     },
     login(){
-      this.$post(
-        '/outer/login',
-        {
-          mobile:this.phone,
-          password:this.password
-        },
-        res => {
-          if (res.data.msg === '执行成功') {
-            let user =  res.data.data;
-            this.$store.commit('SAVE_ITEM',{
-              user:user
-            });
-            localStorage.setItem('runye_user',JSON.stringify(user));
-            this.$toast('登录成功');
-            this.$router.push('/home');
+      if (!this.phone) {
+        this.$toast('手机号不能为空');
+      } else if (!this.password) {
+        this.$toast('密码不能为空');
+      } else {
+        this.$post(
+          '/outer/login',
+          {
+            mobile:this.phone,
+            password:this.password
+          },
+          res => {
+            if (res.data.msg === '执行成功') {
+              let user =  res.data.data;
+              this.$store.commit('SAVE_ITEM',{
+                user:user
+              });
+              localStorage.setItem('runye_user',JSON.stringify(user));
+              this.$toast('登录成功');
+              this.$router.push('/home');
+            }
           }
-        }
-      )
+        )
+      }
     }
   }
 

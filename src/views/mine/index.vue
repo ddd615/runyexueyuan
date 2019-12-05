@@ -3,7 +3,7 @@
     <mine-nav></mine-nav>
     <list></list>
     <div style="text-align: center">
-      <van-button type="primary" size="large">退出登录</van-button>
+      <van-button type="primary" size="large" @click="logout">退出登录</van-button>
     </div>
     <mine-footer></mine-footer>
   </div>
@@ -17,6 +17,19 @@
         name: "index",
       components:{
           mineNav,list,mineFooter
+      },
+      methods:{
+        logout(){
+          let user = JSON.parse(localStorage.getItem('runye_user'));
+
+          this.$post('/outer/logout',{token:user.accessToken},res => {
+            if (res) {
+              localStorage.removeItem('runye_user');
+              this.$toast('退出成功');
+              this.$router.push({path:'/login'});
+            }
+          })
+        }
       }
     }
 </script>

@@ -1,17 +1,17 @@
 <template>
     <div class="inform">
-      <div class="inform-card" v-for="(item,index) in informList">
-        <div class="card-header">
+      <div class="inform-card" v-for="(item,index) in informList" >
+        <div class="card-header" @click="toDetail(item)">
           <img src="../../assets/images/通知.png" alt="">
           <span>{{item.title}}</span>
-          <div class="red-point"></div>
+          <div class="red-point" v-if="item.isRead === 0"></div>
         </div>
-        <p class="card-content" v-html="item.content">
+        <p class="card-content" v-html="item.content" @click="toDetail(item)">
 
         </p>
         <div class="card-footer">
-          <p>2019/12/12   17:00</p>
-          <van-button>我知道了</van-button>
+          <p>{{item.createTime}}</p>
+          <van-button :disabled="item.isConfirm === 1" @click.stop="confirm(item,index)">我知道了</van-button>
         </div>
       </div>
     </div>
@@ -41,6 +41,18 @@
               }
             )
           },
+        toDetail(item){
+            this.$router.push({path:'/mine/informShow',query:{id:item.id}});
+        },
+        confirm(item,index){
+            let user = JSON.parse(localStorage.getItem('runye_user'));
+            this.$get(`/notice/confirm/${item.id}/${user.memberId}`,{},res => {
+              if (res) {
+                this.$toast('已确定');
+                this.informList[index].isConfirm = 1;
+              }
+            })
+        }
 
       }
     }
@@ -107,6 +119,11 @@
         }
         .van-button--normal{
           padding: 0;
+        }
+        .van-button--disabled{
+          background: #F2F2F2;
+          color: #999999;
+          border: none;
         }
       }
     }

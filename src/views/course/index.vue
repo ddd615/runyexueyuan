@@ -24,7 +24,7 @@
           </van-col>
           <van-col span="19" style="height: 100vh;overflow: auto;padding-bottom: 50px;">
             <div class="layout-right">
-              <div class="card" v-for="item in courseList">
+              <div class="card" v-for="item in courseList" @click="toDetail(item)">
                 <img :src="item.mainPic" alt="" width="100%" height="100%">
                 <div class="card-num">
                   <p>{{item.name}}</p>
@@ -108,6 +108,9 @@
               this.courseList = res.data.data.list;
               }
             )
+        },
+        toDetail(item){
+            this.$router.push({path:'/course/detail/'+item.id})
         }
       }
     }

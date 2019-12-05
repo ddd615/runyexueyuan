@@ -231,6 +231,7 @@
               },
               res => {
               if (res) {
+                this.$toast('报名成功');
                 this.$router.go(-1);
               }
 

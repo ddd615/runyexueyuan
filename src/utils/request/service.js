@@ -54,7 +54,7 @@ service.interceptors.request.use(
     }
     let url = config.url;
     if (method === 'post' && url !== '/member/update' && url !== '/file/upload' && url !== '/outer/forgetPassword'
-    && url !== '/registration/save') {
+    && url !== '/registration/save' && url !== '/outer/logout') {
       let keys = Object.keys(config.data);
       let formData = new FormData();
       for (let i = 0, len = keys.length; i < len; i++) {
@@ -78,7 +78,7 @@ service.interceptors.response.use(
   response => {
     // console.log(response.data.code);
     store.commit('hideLoading');
-    if (response.data.msg === '执行成功'){
+    if (response.data.code === 0){
       return response;
     }else {
       Toast(response.data.msg);
