@@ -33,7 +33,7 @@
       methods:{
           getInform(){
             let user = JSON.parse(localStorage.getItem('runye_user'));
-            this.$get(`/notice/list?memberId=1&pageNum=${this.pageNum}&pageSize=${this.pageSize}`,
+            this.$get(`/notice/list?memberId=${user.memberId}&pageNum=${this.pageNum}&pageSize=${this.pageSize}`,
               {
               },
               res => {

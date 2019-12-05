@@ -7,7 +7,8 @@ const initPageState = () => {
   return {
     user:{
 
-    }
+    },
+    loading:false,
   };
 };
 

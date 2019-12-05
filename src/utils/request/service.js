@@ -82,22 +82,7 @@ service.interceptors.response.use(
       return response;
     }else {
       Toast(response.data.msg);
-      return ;
     }
-    // if (response.data) {
-    //   switch (response.data.code) {
-    //     case 400:
-    //       console.log(response.data.message);
-    //       Toast(response.data.message);
-    //       if (response.data.message === '会话已失效，请重新登录'){
-    //         localStorage.removeItem('userMsg');
-    //         router.replace({path:'/login'});
-    //       }
-    //       break;
-    //
-    //
-    //   }
-    // }
 
   },
 
