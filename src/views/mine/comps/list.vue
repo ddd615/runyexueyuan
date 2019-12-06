@@ -66,8 +66,10 @@
           <span>前进之路</span>
         </template>
         <template>
-          <span>更多</span>
-          <img src="../../../assets/images/arrow.png" alt="">
+          <div @click="toPage('/mine/mileage')">
+            <span>更多</span>
+            <img src="../../../assets/images/arrow.png" alt="">
+          </div>
         </template>
       </van-cell>
       <van-cell>

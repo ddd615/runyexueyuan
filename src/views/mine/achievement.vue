@@ -52,7 +52,11 @@
           this.isCheck = true;
           this.$get(`/grade/list?memberName=张三&identity=411329200004291600&pageNum=1&pageSize=10`,{},res => {
             if (res) {
+              let num = 0;
               this.gradeList = res.data.data.list;
+              res.data.data.list.map((s,i) => {
+                let id = s.courseId;
+              })
             }
           })
 

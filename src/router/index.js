@@ -148,6 +148,14 @@ const routes = [
       title:'我的课程',
     },
     component: ()=>import('@/views/mine/myCourse.vue')
+  },
+  {
+    path:'/mine/mileage',
+    name:'mileage',
+    meta:{
+      title:'我的课程',
+    },
+    component: ()=>import('@/views/mine/mileage.vue')
   }
 
 ]
