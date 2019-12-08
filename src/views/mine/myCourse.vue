@@ -3,7 +3,7 @@
     <van-tab title="已报名" >
       <div class="card" v-for="item in courseList">
         <div class="card-img">
-          <img src="../../assets/images/home_course1.png" alt="" width="100%" height="100%">
+          <img :src="item.mainPic" alt="" width="100%" height="100%">
           <div class="card-num">
             <p>{{item.courseName}}</p>
             <p>编号：{{item.courseId}}</p>
@@ -11,8 +11,8 @@
         </div>
         <div class="card-button">
           <div class="no-sign-in">
-            <van-button>签到</van-button>
-            <van-button>请假</van-button>
+            <van-button @click="changeStatus(0)">签到</van-button>
+            <van-button @click="changeStatus(1)">请假</van-button>
           </div>
         </div>
       </div>
@@ -85,8 +85,18 @@
       },
       methods:{
           getMyCourse(){
-            let user = JSON.parse(localStorage.getItem('runye_user'))
-            this.$get(`/registration/list?memberId=${user.memberId}&pageNum=${this.pageNum}&pageSize=${this.pageSize}&isRescheduling=${this.active}`,
+            let user = JSON.parse(localStorage.getItem('runye_user'));
+            let isRescheduling;
+            if (this.active === 0) {
+              isRescheduling = 1;
+            } else if (this.active === 1) {
+              isRescheduling = 2
+            } else if (this.active === 3) {
+              isRescheduling = 3
+            } else if (this.active === 2) {
+              isRescheduling = 0;
+            }
+            this.$get(`/registration/list?memberId=${user.memberId}&pageNum=${this.pageNum}&pageSize=${this.pageSize}&isRescheduling=${isRescheduling}`,
               {},res => {
               if(res) {
                 this.courseList = res.data.data.list;
@@ -107,6 +117,9 @@
 
               }
             })
+        },
+        changeStatus(status){
+
         }
       }
     }
