@@ -45,7 +45,7 @@
         </div>
         <div class="card-button">
           <div class="sign-in">
-            <van-button size="large">删除课程</van-button>
+            <van-button size="large" @click="del(item.id)">删除课程</van-button>
           </div>
         </div>
       </div>
@@ -88,12 +88,25 @@
             let user = JSON.parse(localStorage.getItem('runye_user'))
             this.$get(`/registration/list?memberId=${user.memberId}&pageNum=${this.pageNum}&pageSize=${this.pageSize}&isRescheduling=${this.active}`,
               {},res => {
-              this.courseList = res.data.data.list;
+              if(res) {
+                this.courseList = res.data.data.list;
+              }else {
+                this.courseList = []
+              }
             })
           },
         onClick(){
             // this.courseList = [];
             this.getMyCourse();
+        },
+        del(id) {
+            this.$post(`/registration/delete/${id}`,{},res => {
+              if (res) {
+                this.$toast('删除成功');
+              } else {
+
+              }
+            })
         }
       }
     }

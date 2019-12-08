@@ -1,7 +1,7 @@
 <template>
   <div>
     <van-swipe :autoplay="3000" indicator-color="white">
-      <van-swipe-item v-for="item in bannerList">
+      <van-swipe-item v-for="item in bannerList" @click="toShow(item.content)">
         <img :src="item.content" alt="" width="100%" height="100%">
       </van-swipe-item>
     </van-swipe>
@@ -28,7 +28,10 @@
                 this.bannerList = res.data.data.list;
               }
             })
-          }
+          },
+        toShow(content){
+            this.$router.push({path:'/richText',query:{content:content}});
+        }
       }
     }
 </script>

@@ -1,8 +1,8 @@
 <template>
     <div class="achievement">
       <van-cell-group>
-        <van-field v-model="value" label="姓名" placeholder="请输入姓名" />
-        <van-field v-model="value" label="证件号" placeholder="请输入姓名" />
+        <van-field v-model="name" label="姓名" :disabled="disabled" placeholder="请输入姓名" />
+        <van-field v-model="identity" label="证件号" :disabled="disabled" placeholder="请输入姓名" />
       </van-cell-group>
       <van-button type="primary" size="large" v-if="!isCheck" @click="find">查询</van-button>
       <div v-if="isCheck">
@@ -18,14 +18,10 @@
           <van-col span="6">{{item.courseName}}</van-col>
           <van-col span="6">{{item.testTime}}</van-col>
           <van-col span="4" tag="ul">
-              <li>{{item.subject}}</li>
-              <li>2</li>
-              <li>3</li>
+              <li v-for="s in item.subjectList">{{s.subject}}</li>
           </van-col>
           <van-col span="4" tag="ul">
-            <li>{{item.score}}</li>
-            <li>2</li>
-            <li>3</li>
+            <li v-for="s in item.subjectList">{{s.score}}</li>
           </van-col>
           <van-col span="4">{{item.isQualified === 0 ? '通过':'不通过'}}</van-col>
         </van-row>
@@ -44,19 +40,50 @@
       data(){
           return{
             isCheck:false,
-            gradeList:[]
+            gradeList:[],
+            name:'张三',
+            identity:'411329200004291600',
+            disabled:false
           }
       },
       methods:{
         find(){
-          this.isCheck = true;
-          this.$get(`/grade/list?memberName=张三&identity=411329200004291600&pageNum=1&pageSize=10`,{},res => {
+
+          this.$get(`/grade/list?memberName=${this.name}&identity=${this.identity}&pageNum=1&pageSize=10`,{},res => {
             if (res) {
+              this.isCheck = true;
+              this.disabled = true;
               let num = 0;
               this.gradeList = res.data.data.list;
+              let id ;
+              let arr = [];
               res.data.data.list.map((s,i) => {
-                let id = s.courseId;
-              })
+                if (s.courseId) {
+                  if (!id) {
+                    id = s.courseId;
+                  }
+                  let obj = {
+                    courseId : id,
+                    courseName: s.courseName,
+                    isQualified:s.isQualified,
+                    testTime : s.testTime,
+                    subjectList:[]
+                  };
+                  res.data.data.list.map((item,index) => {
+                    if (id === item.courseId) {
+                      obj.subjectList.push({
+                        subject:item.subject,
+                        score:item.score
+                      })
+                      res.data.data.list[index].courseId = ''
+                    }
+
+                  });
+
+                  arr.push(obj);
+                }
+              });
+              this.gradeList = arr;
             }
           })
 

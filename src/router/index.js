@@ -46,6 +46,14 @@ const routes = [
     component: ()=>import('@/views/home/index.vue')
   },
   {
+    path:'/richText',
+    name:'richText',
+    meta:{
+      title:'详情'
+    },
+    component: ()=>import('@/views/home/comps/richText.vue')
+  },
+  {
     path:'/mine',
     name:'mine',
     meta:{

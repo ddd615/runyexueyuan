@@ -54,7 +54,7 @@ service.interceptors.request.use(
     }
     let url = config.url;
     if (method === 'post' && url !== '/member/update' && url !== '/file/upload' && url !== '/outer/forgetPassword'
-    && url !== '/registration/save' && url !== '/outer/logout') {
+    && url !== '/registration/save' && url !== '/outer/logout' && url !== '/certificate/save') {
       let keys = Object.keys(config.data);
       let formData = new FormData();
       for (let i = 0, len = keys.length; i < len; i++) {

@@ -47,7 +47,11 @@
           },
           res => {
           this.pageNum++;
-          this.courseList = res.data.data.gengduo;
+          this.courseList = this.courseList.concat(res.data.data.gengduo);
+          this.loading = false;
+          if (res.data.data.gengduo.length <10) {
+            this.finished = true;
+          }
           }
         )
       },

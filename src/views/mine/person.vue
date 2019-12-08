@@ -171,30 +171,31 @@
         <div v-if="isEdit">
           <van-cell-group>
             <van-field
-              v-model="value"
+              v-model="certification.name"
               label="证书名称："
               input-align="right"
             />
             <van-cell title="证书上传：">
               <template slot="default">
-                <van-uploader :after-read="afterRead">
-                  <img src="../../assets/images/add_photo.png" alt="">
+                <van-uploader :after-read="certificationUpload">
+                  <img src="../../assets/images/add_photo.png" alt="" v-if="!certification.mainPic" width="86" height="68">
+                  <img :src="certification.mainPic" alt="" width="86" height="68" v-else>
                 </van-uploader>
               </template>
             </van-cell>
             <van-field
-              v-model="value"
+              v-model="certification.term"
               label="证书有效期："
               input-align="right"
             />
             <van-field
-              v-model="value"
+              v-model="certification.expireTime"
               label="到期提醒："
               input-align="right"
             />
           </van-cell-group>
           <div class="bottom-button">
-            <van-button type="primary"  @click="save">保存</van-button>
+            <van-button type="primary"  @click="saveCertification">保存</van-button>
             <van-button type="info"  @click="edit">修改</van-button>
           </div>
         </div>
@@ -232,7 +233,13 @@
             educationList:['初中','高中','大专','本科','硕士','博士'],
             hasPic:false,
             identityType:'',
-            isEdit:false
+            isEdit:false,
+            certification:{
+              term:'',
+              name:'',
+              mainPic:'',
+              expireTime:'',
+            }
           }
       },
       created(){
@@ -370,8 +377,23 @@
           })
           // this.userInfo.mainPic = file.content;
         },
-        afterRead(file){
+        certificationUpload(file){
+          console.log(file);
+          let param = new FormData();
+          param.append('file',file.file);
+          this.$post('/file/upload',param,res => {
+            console.log(res.data.data);
+            this.certification.mainPic = res.data.data;
+          })
+        },
+        saveCertification(){
+            let user = JSON.parse(localStorage.getItem('runye_user'));
+            this.certification.memberId = user.memberId;
+            this.$post('/certificate/save',this.certification,res => {
+              if (res) {
 
+              }
+            })
         }
       }
     }

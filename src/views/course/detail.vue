@@ -35,7 +35,7 @@
           </div>
         </van-tab>
         <van-tab title="课程安排">
-
+          <div class="rich-text" v-html="course.content"></div>
         </van-tab>
       </van-tabs>
       <van-button type="danger" size="large" :to="{path:'/course/enrollMsg',query:{id:$route.params.id}}">立即报名</van-button>
@@ -102,5 +102,13 @@
         height: 194px;
       }
     }
+  }
+  .rich-text{
+    background: #ffffff;
+    min-height: 200px;
+    padding: 5px;
+  }
+  .rich-text /deep/ img {
+    max-width: 100%;
   }
 </style>
