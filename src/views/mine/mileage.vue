@@ -1,8 +1,8 @@
 <template>
     <div>
-      <div v-for="item in mileageList">
-        <div class="first" :style="{'background':'url('+descItem.background+')no-repeat'}" v-for="(descItem,descIndex) in item">
-          <div class="one-mileage" v-for="(s,i) in descItem.list">
+      <div >
+        <div class="first" :style="{'background':'url('+item.background+')no-repeat'}" v-for="item in mileageList">
+          <div class="one-mileage" v-for="(s,i) in item.list">
             <div class="one-mileage-bg" :style="{'left': s.left+'%', 'background':'url('+s.background+')no-repeat','background-size':'100% 100%'}">
               <img src="../../assets/images/mileage_star.png" alt="">
               <span>{{s.type === 1 ? '加入' : '完成'}}{{s.courseName}}</span>
@@ -116,6 +116,36 @@
                 arrow:require('../../assets/images/mileage_desc_left.png'),
                 left: 4
               },
+            ],
+            fourthMileage:[
+              {
+                arrow:require('../../assets/images/mileage_desc_left.png'),
+                left: 18
+              },
+              {
+                arrow:require('../../assets/images/mileage_desc_left.png'),
+                left: 20
+              },
+              {
+                arrow:require('../../assets/images/mileage_desc_left.png'),
+                left: 22
+              },
+              {
+                arrow:require('../../assets/images/mileage_desc.png'),
+                left: 50
+              },
+              {
+                arrow:require('../../assets/images/mileage_desc_left.png'),
+                left: 6
+              },
+              {
+                arrow:require('../../assets/images/mileage_desc_left.png'),
+                left: 3
+              },
+              {
+                arrow:require('../../assets/images/mileage_desc_left.png'),
+                left: 4
+              },
             ]
           }
       },
@@ -150,7 +180,6 @@
                 let num = 7;
                 let num1 = 3;
                 arr.push([]);
-                arr1.push([]);
                 list.map((s,i) => {
                   if (i<num) {
                     arr[num/7-1].push(s);
@@ -160,61 +189,74 @@
                     arr[num/7-1].push(s);
                   }
                 });
+                console.log(arr);
                 arr.map((s,i) => {
-                  if (i<num1) {
-                    console.log(num1/3-1)
-                    arr1[num1/3-1].push({
-                      list:s,
-                      background:this.firstBg
-                    });
-
-
-                  } else {
-                    num1+=3;
-                    arr1.push([]);
-                    arr1[num1/3-1].push({
-                      list:s,
-                      background:this.firstBg
-                    });
-                  }
+                   if (i === 0) {
+                     let list = [];
+                     s.map((item,index) =>{
+                       s[index].background = this.firstMileage[index].arrow;
+                       s[index].left = this.firstMileage[index].left;
+                     });
+                     arr1.push({
+                       background:this.firstBg,
+                       list:s
+                     })
+                   } else if (i === 1) {
+                     s.map((item,index) =>{
+                       s[index].background = this.secondMileage[index].arrow;
+                       s[index].left = this.secondMileage[index].left;
+                     });
+                     arr1.push({
+                       background:this.secondBg,
+                       list:s
+                     })
+                   } else if (i >= 2) {
+                     if (i%2 === 0) {
+                       s.map((item,index) =>{
+                         s[index].background = this.thirdMileage[index].arrow;
+                         s[index].left = this.thirdMileage[index].left;
+                       });
+                       arr1.push({
+                         background:this.thirdBg,
+                         list:s
+                       })
+                     } else {
+                       s.map((item,index) =>{
+                         s[index].background = this.fourthMileage[index].arrow;
+                         s[index].left = this.fourthMileage[index].left;
+                       });
+                       arr1.push({
+                         background:this.fourthBg,
+                         list:s
+                       })
+                     }
+                   }
                 });
+                console.log(arr1);
 
-                arr1.map((s,i) => {
-                  if (s.length === 3) {
-                    arr1[i][0].background = this.firstBg;
-                    arr1[i][1].background = this.secondBg;
-                    arr1[i][2].background = this.thirdBg;
-                    arr1[i][0].list.map((item,index) => {
-                      arr1[i][0].list[index].background = this.firstMileage[index].arrow;
-                      arr1[i][0].list[index].left = this.firstMileage[index].left;
-                    })
-                    arr1[i][1].list.map((item,index) => {
-                      arr1[i][1].list[index].background = this.secondMileage[index].arrow
-                      arr1[i][1].list[index].left = this.secondMileage[index].left;
-                    })
-                    arr1[i][2].list.map((item,index) => {
-                      arr1[i][2].list[index].background = this.thirdMileage[index].arrow
-                      arr1[i][2].list[index].left = this.thirdMileage[index].left;
-                    })
-                  }else if (s.length === 2) {
-                    arr1[i][0].background = this.firstBg;
-                    arr1[i][1].background = this.secondBg;
-                    arr1[i][0].list.map((item,index) => {
-                      arr1[i][0].list[index].background = this.firstMileage[index].arrow
-                      arr1[i][0].list[index].left = this.firstMileage[index].left;
-                    })
-                    arr1[i][1].list.map((item,index) => {
-                      arr1[i][1].list[index].background = this.secondMileage[index].arrow
-                      arr1[i][1].list[index].left = this.secondMileage[index].left;
-                    })
-                  } else if (s.length === 1) {
-                    arr1[i][0].background = this.firstBg;
-                    arr1[i][0].list.map((item,index) => {
-                      arr1[i][0].list[index].background = this.firstMileage[index].arrow
-                      arr1[i][0].list[index].left = this.firstMileage[index].left;
-                    })
-                  }
-                });
+                // console.log(arr1);
+                // arr1.map((s,i) => {
+                //   if (s.length === 2) {
+                //     arr1[i][0].background = this.firstBg;
+                //     arr1[i][1].background = this.secondBg;
+                //     arr1[i][0].list.map((item,index) => {
+                //       arr1[i][0].list[index].background = this.firstMileage[index].arrow;
+                //       arr1[i][0].list[index].left = this.firstMileage[index].left;
+                //     });
+                //     arr1[i][1].list.map((item,index) => {
+                //       arr1[i][1].list[index].background = this.secondMileage[index].arrow
+                //       arr1[i][1].list[index].left = this.secondMileage[index].left;
+                //     });
+                //   } else if (s.length === 1) {
+                //     arr1[i][0].background = this.firstBg;
+                //     arr1[i][0].list.map((item,index) => {
+                //       arr1[i][0].list[index].background = this.firstMileage[index].arrow
+                //       arr1[i][0].list[index].left = this.firstMileage[index].left;
+                //     })
+                //   } else if (s.length > 2) {
+                //
+                //   }
+                // });
                 console.log(arr1);
                 this.mileageList = arr1;
               }

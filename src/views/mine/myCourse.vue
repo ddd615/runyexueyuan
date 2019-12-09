@@ -1,56 +1,90 @@
 <template>
-  <van-tabs v-model="active" @click="onClick" title-active-color="#0085FF" title-inactive-color="#171717" line-width="0px">
+  <van-tabs v-model="active" @change="onChange" @click="onClick" title-active-color="#0085FF" title-inactive-color="#171717" line-width="0px">
     <van-tab title="已报名" >
-      <div class="card" v-for="item in courseList">
-        <div class="card-img">
-          <img :src="item.mainPic" alt="" width="100%" height="100%">
-          <div class="card-num">
-            <p>{{item.courseName}}</p>
-            <p>编号：{{item.courseId}}</p>
+      <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+        <van-list
+          v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+          @load="onLoad"
+        >
+        <div class="card" v-for="item in courseList">
+          <div class="card-img">
+            <img :src="item.mainPic" alt="" width="100%" height="100%">
+            <div class="card-num">
+              <p>{{item.courseName}}</p>
+              <p>编号：{{item.courseId}}</p>
+            </div>
+          </div>
+          <div class="card-button">
+            <div class="no-sign-in">
+              <van-button @click="changeStatus(0)">签到</van-button>
+              <van-button @click="changeStatus(1)">请假</van-button>
+            </div>
           </div>
         </div>
-        <div class="card-button">
-          <div class="no-sign-in">
-            <van-button @click="changeStatus(0)">签到</van-button>
-            <van-button @click="changeStatus(1)">请假</van-button>
-          </div>
-        </div>
-      </div>
+        </van-list>
+      </van-pull-refresh>
     </van-tab>
     <van-tab title="已改期">
-      <div class="card"  v-for="item in courseList">
-        <div class="card-img">
-          <img :src="item.mainPic" alt="" width="100%" height="100%">
-          <div class="card-num">
-            <p>{{item.courseName}}</p>
-            <p>编号：{{item.id}}</p>
+      <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+        <van-list
+          v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+          @load="onLoad"
+        >
+          <div class="card"  v-for="item in courseList">
+            <div class="card-img">
+              <img :src="item.mainPic" alt="" width="100%" height="100%">
+              <div class="card-num">
+                <p>{{item.courseName}}</p>
+                <p>编号：{{item.id}}</p>
+              </div>
+            </div>
+            <div class="card-button">
+              <div class="no-sign-in">
+                <van-button>确定参加</van-button>
+                <van-button>取消参加</van-button>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="card-button">
-          <div class="no-sign-in">
-            <van-button>确定参加</van-button>
-            <van-button>取消参加</van-button>
-          </div>
-        </div>
-      </div>
+        </van-list>
+      </van-pull-refresh>
     </van-tab>
     <van-tab title="已取消">
-      <div class="card" v-for="item in courseList">
-        <div class="card-img">
-          <img :src="item.mainPic" alt="" width="100%" height="100%">
-          <div class="card-num">
-            <p>{{item.courseName}}</p>
-            <p>编号：{{item.courseId}}</p>
+      <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+        <van-list
+          v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+          @load="onLoad"
+        >
+          <div class="card" v-for="item in courseList">
+            <div class="card-img">
+              <img :src="item.mainPic" alt="" width="100%" height="100%">
+              <div class="card-num">
+                <p>{{item.courseName}}</p>
+                <p>编号：{{item.courseId}}</p>
+              </div>
+            </div>
+            <div class="card-button">
+              <div class="sign-in">
+                <van-button size="large" @click="del(item.id)">删除课程</van-button>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="card-button">
-          <div class="sign-in">
-            <van-button size="large" @click="del(item.id)">删除课程</van-button>
-          </div>
-        </div>
-      </div>
+        </van-list>
+      </van-pull-refresh>
     </van-tab>
     <van-tab title="已结束">
+      <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+        <van-list
+          v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+          @load="onLoad"
+        >
       <div class="card" v-for="item in courseList">
         <div class="card-img">
           <img :src="item.mainPic" alt="" width="100%" height="100%">
@@ -65,6 +99,8 @@
           </div>
         </div>
       </div>
+        </van-list>
+      </van-pull-refresh>
     </van-tab>
   </van-tabs>
 </template>
@@ -75,11 +111,14 @@
       data(){
           return{
             active:0,
-            pageNum:1,
+            pageNum:2,
             pageSize:10,
             courseList:[],
             lat:0,
             lng:0,
+            isLoading:false,
+            loading:false,
+            finished:false,
           }
       },
       created(){
@@ -130,9 +169,18 @@
             this.$get(`/registration/list?memberId=${user.memberId}&pageNum=${this.pageNum}&pageSize=${this.pageSize}&isRescheduling=${isRescheduling}`,
               {},res => {
               if(res) {
-                this.courseList = res.data.data.list;
+                this.pageNum++;
+                this.courseList = this.courseList.concat(res.data.data.list);
+                if (res.data.data.nextPage === 0) {
+                  this.finished = true
+                }
+                this.isLoading = false;
+                this.loading = false;
               }else {
-                this.courseList = []
+                this.courseList = [];
+                this.isLoading = false;
+                this.loading = false;
+                this.finished = true;
               }
             })
           },
@@ -152,11 +200,17 @@
         changeStatus(status){
 
         },
-        onComplete(res) {
-            console.log(res);
+        onRefresh(){
+            this.courseList = [];
+            this.finished = false;
+            this.getMyCourse();
         },
-        onError(err){
-          console.log(err);
+        onLoad(){
+            // this.getMyCourse();
+        },
+        onChange(){
+            this.courseList = [];
+            this.finished = false;
         }
       }
     }

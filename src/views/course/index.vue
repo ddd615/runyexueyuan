@@ -22,7 +22,7 @@
               </van-sidebar>
             </div>
           </van-col>
-          <van-col span="19" style="height: 100vh;overflow: auto;padding-bottom: 50px;">
+          <van-col span="19" style="height: 90vh;overflow: auto;padding-bottom: 50px;">
             <div class="layout-right">
               <div class="card" v-for="item in courseList" @click="toDetail(item)">
                 <img :src="item.mainPic" alt="" width="100%" height="100%">
@@ -31,6 +31,7 @@
                   <p>编号：{{item.id}}</p>
                 </div>
               </div>
+
             </div>
           </van-col>
         </van-row>
@@ -52,7 +53,10 @@
             isInput:true,
             pageNum:1,
             categoryList:[],
-            courseList:[]
+            courseList:[],
+            loading:false,
+            finished:false,
+
           }
       },
       watch:{
@@ -85,12 +89,15 @@
           },
         getCourseByParentId(){
            let parentId = this.categoryList[this.activeKey].parentId;
-           this.$get(`/course/listCourseClass?parentId=${parentId}&pageNum=${this.pageNum}&pageSize=10`,
+           this.$get(`/course/listCourseClass?parentId=${parentId}&pageNum=${this.pageNum}&pageSize=1000`,
              {
 
              },
              res => {
-             this.courseList = res.data.data;
+             if (res) {
+               this.courseList = res.data.data;
+             }
+
              }
            )
         },
@@ -111,7 +118,7 @@
         },
         toDetail(item){
             this.$router.push({path:'/course/detail/'+item.id})
-        }
+        },
       }
     }
 </script>
@@ -144,7 +151,7 @@
   }
   .layout-left{
     display: inline-block;
-    height: 100vh;
+    height: 90vh;
     background: #ffffff;
     .van-sidebar-item{
       background-color:#ffffff ;
