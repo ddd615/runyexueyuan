@@ -24,6 +24,7 @@
             firstBg:require('../../assets/images/mileage_first.png'),
             secondBg:require('../../assets/images/mileage_second.png'),
             thirdBg:require('../../assets/images/mileage_third.png'),
+            fourthBg:require('../../assets/images/mileage_fourth.png'),
             mileageList:[],
             firstMileage:[
               {

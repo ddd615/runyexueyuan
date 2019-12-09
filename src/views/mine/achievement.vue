@@ -28,7 +28,7 @@
         <van-row style="height: 10px;background: #F2F2F2"></van-row>
         <van-row class="explain">
           <van-col span="6">成绩说明：</van-col>
-          <van-col span="16">asdasdasdsadsadsadasdasdsadasdsadasdasdasdasdasdasdsadsadsadasdasdsadasdsadasdasdasd</van-col>
+          <van-col span="16">{{gradeList[0].explain}}</van-col>
         </van-row>
       </div>
     </div>
@@ -67,7 +67,8 @@
                     courseName: s.courseName,
                     isQualified:s.isQualified,
                     testTime : s.testTime,
-                    subjectList:[]
+                    subjectList:[],
+                    explain:s.explain
                   };
                   res.data.data.list.map((item,index) => {
                     if (id === item.courseId) {

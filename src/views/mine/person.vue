@@ -183,21 +183,41 @@
                 </van-uploader>
               </template>
             </van-cell>
-            <van-field
-              v-model="certification.term"
-              label="证书有效期："
-              input-align="right"
-            />
+            <van-cell title="证书有效期：">
+              <template>
+                <span @click="indatePicker1 = true;">{{this.startTime | formatter}}</span>~
+                <span @click="indatePicker2 = true;">{{this.endTime | formatter}}</span>
+              </template>
+            </van-cell>
             <van-field
               v-model="certification.expireTime"
               label="到期提醒："
               input-align="right"
             />
           </van-cell-group>
+
           <div class="bottom-button">
             <van-button type="primary"  @click="saveCertification">保存</van-button>
             <van-button type="info"  @click="edit">修改</van-button>
           </div>
+          <van-popup v-model="indatePicker1" position="bottom">
+          <van-datetime-picker
+            type="date"
+            v-model="startTime"
+            :min-date="minDate1"
+            @confirm="confirmStartTime"
+            @cancel="indatePicker1 = false"
+          />
+          </van-popup>
+          <van-popup v-model="indatePicker2" position="bottom">
+            <van-datetime-picker
+              type="date"
+              :min-date="minDate2"
+              v-model="endTime"
+              @confirm="confirmEndTime"
+              @cancel="indatePicker2 = false"
+            />
+          </van-popup>
         </div>
       </van-tab>
     </van-tabs>
@@ -239,8 +259,26 @@
               name:'',
               mainPic:'',
               expireTime:'',
-            }
+            },
+            indatePicker1:false,
+            indatePicker2:false,
+            minDate1:new Date(1970),
+            minDate2:this.startTime,
+            startTime:'开始时间',
+            endTime:'结束时间',
           }
+      },
+      filters:{
+        formatter(val){
+          if (val === '开始时间' || val === '结束时间') {
+            return val;
+          }else {
+            let y = val.getFullYear();
+            let m = val.getMonth()+1;
+            let d = val.getDate();
+            return y+'-'+m+'-'+d;
+          }
+        }
       },
       created(){
         this.getCertificate();
@@ -253,7 +291,10 @@
               {
               },
               res => {
-              this.certificateList = res.data.data.list;
+              if (res) {
+                this.certificateList = res.data.data.list;
+
+              }
               }
             )
           },
@@ -394,6 +435,16 @@
 
               }
             })
+        },
+        confirmStartTime(val){
+
+           this.minDate2 = val;
+           this.startTime = val;
+           this.indatePicker1 = false;
+        },
+        confirmEndTime(val){
+           this.endTime = val;
+           this.indatePicker2 = false;
         }
       }
     }
