@@ -1,7 +1,7 @@
 <template>
     <div>
-      <div >
-        <div class="first" :style="{'background':'url('+item.background+')no-repeat'}" v-for="item in mileageList">
+      <div style="width: 100%;overflow-x: hidden;">
+        <div class="first" :style="{'background':'url('+item.background+')no-repeat bottom','background-size':'100% 100%'}" v-for="item in mileageList">
           <div class="one-mileage" v-for="(s,i) in item.list">
             <div class="one-mileage-bg" :style="{'left': s.left+'%', 'background':'url('+s.background+')no-repeat','background-size':'100% 100%'}">
               <img src="../../assets/images/mileage_star.png" alt="">
@@ -21,9 +21,9 @@
         name: "mileage",
       data(){
           return{
-            firstBg:require('../../assets/images/mileage_first.png'),
+            firstBg:require('../../assets/images/mileage_third.png'),
             secondBg:require('../../assets/images/mileage_second.png'),
-            thirdBg:require('../../assets/images/mileage_third.png'),
+            thirdBg:require('../../assets/images/mileage_first.png'),
             fourthBg:require('../../assets/images/mileage_fourth.png'),
             mileageList:[],
             firstMileage:[
@@ -258,7 +258,8 @@
                 //   }
                 // });
                 console.log(arr1);
-                this.mileageList = arr1;
+
+                this.mileageList = arr1.reverse();
               }
             })
           }
