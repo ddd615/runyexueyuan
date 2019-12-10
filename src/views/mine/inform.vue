@@ -93,7 +93,7 @@
         padding: 8px 12px;
         font-size: 12px;
         line-height: 20px;
-        max-height: 120px;
+        /*max-height: 120px;*/
         text-overflow: ellipsis;
         /deep/ img {
           max-width: 100%;

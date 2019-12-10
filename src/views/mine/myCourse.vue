@@ -18,8 +18,8 @@
           </div>
           <div class="card-button">
             <div class="no-sign-in">
-              <van-button @click="changeStatus(0)">签到</van-button>
-              <van-button @click="changeStatus(1)">请假</van-button>
+              <van-button @click="changeStatus(1,item)">签到</van-button>
+              <van-button @click="changeStatus(0,item)">请假</van-button>
             </div>
           </div>
         </div>
@@ -34,7 +34,7 @@
           finished-text="没有更多了"
           @load="onLoad"
         >
-          <div class="card"  v-for="item in courseList">
+          <div class="card"  v-for="(item,index) in courseList">
             <div class="card-img">
               <img :src="item.mainPic" alt="" width="100%" height="100%">
               <div class="card-num">
@@ -44,8 +44,8 @@
             </div>
             <div class="card-button">
               <div class="no-sign-in">
-                <van-button>确定参加</van-button>
-                <van-button>取消参加</van-button>
+                <van-button @click="join(1,item,index)">确定参加</van-button>
+                <van-button @click="join(0,item,index)">取消参加</van-button>
               </div>
             </div>
           </div>
@@ -60,7 +60,7 @@
           finished-text="没有更多了"
           @load="onLoad"
         >
-          <div class="card" v-for="item in courseList">
+          <div class="card" v-for="(item,index) in courseList">
             <div class="card-img">
               <img :src="item.mainPic" alt="" width="100%" height="100%">
               <div class="card-num">
@@ -70,7 +70,7 @@
             </div>
             <div class="card-button">
               <div class="sign-in">
-                <van-button size="large" @click="del(item.id)">删除课程</van-button>
+                <van-button size="large" @click="del(item.id,index)">删除课程</van-button>
               </div>
             </div>
           </div>
@@ -185,19 +185,39 @@
             })
           },
         onClick(){
-            // this.courseList = [];
+            this.courseList = [];
             this.getMyCourse();
         },
-        del(id) {
-            this.$post(`/registration/delete/${id}`,{},res => {
+        del(id,index) {
+            this.$get(`/registration/delete/${id}`,{},res => {
               if (res) {
                 this.$toast('删除成功');
+                this.courseList.splice(index,1);
               } else {
 
               }
             })
         },
-        changeStatus(status){
+        changeStatus(status,item){
+            let user = JSON.parse(localStorage.getItem('runye_user'));
+
+
+                this.$post('/attendance/save',
+                  {
+                    courseId:item.courseId,
+                    lat:this.lat,
+                    lon:this.lng,
+                    memberId: user.memberId,
+                    type:status
+                  },res => {
+                  if (res) {
+                    if (status === 0) {
+                      this.$toast('请假成功');
+                    } else {
+                      this.$toast('签到成功');
+                    }
+                  }
+                  })
 
         },
         onRefresh(){
@@ -211,6 +231,24 @@
         onChange(){
             this.courseList = [];
             this.finished = false;
+        },
+        join(status,item,index) {
+            let user = JSON.parse(localStorage.getItem('runye_user'))
+            this.$post('/registration/isConfig',
+              {
+                id:item.id,
+                isRescheduling:status,
+              },res => {
+              if (res) {
+                if (status === 0) {
+                  this.$toast('已取消');
+
+                } else {
+                  this.$toast('已确认');
+                }
+                this.courseList.splice(index,1);
+              }
+              })
         }
       }
     }

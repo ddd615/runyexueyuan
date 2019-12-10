@@ -112,7 +112,7 @@
           />
           <van-cell title="电子照片（白底彩照）：">
             <template>
-              <van-uploader :after-read="afterRead">
+              <van-uploader :after-read="afterRead" :disabled="disabled">
                 <img src="../../assets/images/add_photo.png" alt="" v-if="!hasPic">
                 <img :src="userInfo.mainPic" alt="" v-else width="86" height="78">
               </van-uploader>
@@ -160,13 +160,13 @@
       <van-tab title="个人证书">
         <div class="certificate" v-if="!isEdit">
           <van-cell-group>
-            <van-cell :title="item.name" v-for="item in certificateList"/>
+            <van-cell :title="item.name" v-for="item in certificateList" @click="handleEdit(item)"/>
           </van-cell-group>
           <div class="no-certificate">
             <img src="../../assets/images/mine_zs.png" alt="">
             <p>没有证书哦</p>
           </div>
-          <van-button type="primary" icon="plus" @click="isEdit = true">添加证书</van-button>
+          <van-button type="primary" icon="plus" @click="addCertification">添加证书</van-button>
         </div>
         <div v-if="isEdit">
           <van-cell-group>
@@ -174,10 +174,11 @@
               v-model="certification.name"
               label="证书名称："
               input-align="right"
+              :disabled="certaficationEdit"
             />
             <van-cell title="证书上传：">
               <template slot="default">
-                <van-uploader :after-read="certificationUpload">
+                <van-uploader :after-read="certificationUpload" :disabled="certaficationEdit">
                   <img src="../../assets/images/add_photo.png" alt="" v-if="!certification.mainPic" width="86" height="68">
                   <img :src="certification.mainPic" alt="" width="86" height="68" v-else>
                 </van-uploader>
@@ -185,20 +186,20 @@
             </van-cell>
             <van-cell title="证书有效期：">
               <template>
-                <span @click="indatePicker1 = true;">{{this.startTime | formatter}}</span>~
-                <span @click="indatePicker2 = true;">{{this.endTime | formatter}}</span>
+                <span @click="popupPicker(1)">{{this.startTime | formatter}}</span>~
+                <span @click="popupPicker(2)">{{this.endTime | formatter}}</span>
               </template>
             </van-cell>
-            <van-field
-              v-model="certification.expireTime"
-              label="到期提醒："
-              input-align="right"
-            />
+            <van-cell title="到期提醒："  is-link @click="popupPicker(3)">
+              <template>
+                <span>{{this.outDate | formatterTime}}</span>
+              </template>
+            </van-cell>
           </van-cell-group>
 
           <div class="bottom-button">
             <van-button type="primary"  @click="saveCertification">保存</van-button>
-            <van-button type="info"  @click="edit">修改</van-button>
+            <van-button type="info"  @click="certaficationEdit = false;">修改</van-button>
           </div>
           <van-popup v-model="indatePicker1" position="bottom">
           <van-datetime-picker
@@ -209,13 +210,22 @@
             @cancel="indatePicker1 = false"
           />
           </van-popup>
-          <van-popup v-model="indatePicker2" position="bottom">
+          <van-popup v-model="indatePicker2 " position="bottom">
             <van-datetime-picker
               type="date"
               :min-date="minDate2"
               v-model="endTime"
               @confirm="confirmEndTime"
               @cancel="indatePicker2 = false"
+            />
+          </van-popup>
+          <van-popup v-model="indatePicker3" position="bottom">
+            <van-datetime-picker
+              type="date"
+              :min-date="minDate2"
+              v-model="outDate"
+              @confirm="confirmOutDate"
+              @cancel="indatePicker3 = false"
             />
           </van-popup>
         </div>
@@ -266,17 +276,31 @@
             minDate2:this.startTime,
             startTime:'开始时间',
             endTime:'结束时间',
+            indatePicker3:false,
+            outDate:'',
+            certaficationEdit:true,
           }
       },
       filters:{
         formatter(val){
-          if (val === '开始时间' || val === '结束时间') {
+          console.log(typeof (val))
+          if (typeof (val) === "string") {
             return val;
-          }else {
+          }else if (typeof (val) === 'object') {
             let y = val.getFullYear();
             let m = val.getMonth()+1;
             let d = val.getDate();
             return y+'-'+m+'-'+d;
+          }
+        },
+        formatterTime(val){
+          if (typeof (val) === "string") {
+            return val;
+          }else if (typeof (val) === "object") {
+            let y = val.getFullYear();
+            let m = val.getMonth()+1;
+            let d = val.getDate();
+            return y+'-'+m+'-'+d+' 00:00:00';
           }
         }
       },
@@ -287,7 +311,7 @@
       methods:{
           getCertificate(){
             let user = JSON.parse(localStorage.getItem('runye_user'));
-            this.$get(`/certificate/list?pageNum=${this.pageNum}&pageSize=10&memberId=${user.memberId}`,
+            this.$get(`/certificate/list?pageNum=${this.pageNum}&pageSize=99&memberId=${user.memberId}`,
               {
               },
               res => {
@@ -427,14 +451,63 @@
             this.certification.mainPic = res.data.data;
           })
         },
+        changeTime(val){
+          if (typeof (val) === 'string') {
+            return val;
+          } else if (typeof (val) === 'object') {
+            let y = val.getFullYear();
+            let m = val.getMonth()+1;
+            let d = val.getDate();
+            return y+'-'+m+'-'+d;
+          }
+
+        },
+        changeTimes(val){
+          if (typeof (val) === 'string') {
+            return val;
+          } else if (typeof (val) === 'object') {
+            let y = val.getFullYear();
+            let m = val.getMonth()+1;
+            let d = val.getDate();
+            return y+'-'+m+'-'+d +' 00:00:00';
+          }
+
+        },
         saveCertification(){
             let user = JSON.parse(localStorage.getItem('runye_user'));
             this.certification.memberId = user.memberId;
-            this.$post('/certificate/save',this.certification,res => {
-              if (res) {
-
-              }
-            })
+            if (this.certification.id) {
+              this.$post('/certificate/update',
+                {
+                  expireTime:this.changeTimes(this.outDate),
+                  term:this.changeTime(this.startTime)+','+this.changeTime(this.endTime),
+                  memberId:user.memberId,
+                  mainPic:this.certification.mainPic,
+                  name:this.certification.name,
+                  id:this.certification.id,
+                },res => {
+                if (res) {
+                  this.$toast('修改成功');
+                  this.getCertificate();
+                  this.isEdit = false;
+                }
+                })
+            } else {
+              this.$post('/certificate/save',
+                {
+                  expireTime:this.changeTime(this.outDate)+' 00:00:00',
+                  term:this.changeTime(this.startTime)+','+this.changeTime(this.endTime),
+                  memberId:user.memberId,
+                  mainPic:this.certification.mainPic,
+                  name:this.certification.name
+                },res => {
+                  if (res) {
+                    this.$toast('保存成功');
+                    this.isEdit = false;
+                    this.getCertificate();
+                  }
+                })
+            }
         },
         confirmStartTime(val){
 
@@ -445,6 +518,43 @@
         confirmEndTime(val){
            this.endTime = val;
            this.indatePicker2 = false;
+        },
+        confirmOutDate(val){
+            console.log(val);
+            this.outDate = val;
+            this.indatePicker3 = false;
+        },
+        handleEdit(item){
+            this.$get(`/certificate/info/${item.id}`,{},res => {
+              if (res) {
+                let info = res.data.data;
+                this.certification.name = info.name;
+                this.certification.mainPic = info.mainPic;
+                this.certification.id = info.id;
+                this.outDate = info.expireTime;
+                this.startTime = info.term.split(',')[0];
+                this.endTime = info.term.split(',')[0];
+                this.isEdit = true;
+              }
+            })
+        },
+        popupPicker(num){
+            if (!this.certaficationEdit) {
+              if (num === 1) {
+                this.indatePicker1 = true;
+              } else if (num === 2) {
+                this.indatePicker2 = true;
+              } else if (num === 3) {
+                this.indatePicker3 = true;
+              }
+            }
+        },
+        addCertification(){
+            this.isEdit = true;
+            this.certification = {};
+            this.startTime = '开始时间';
+            this.endTime = '结束时间';
+            this.outDate = '';
         }
       }
     }
@@ -485,7 +595,7 @@
     }
   }
   .certificate{
-    text-align: center;
+
     .no-certificate{
       text-align: center;
       padding-top: 100px;
@@ -499,6 +609,9 @@
       width: 70%;
       border-radius: 10px;
       margin-top: 26px;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
       .van-button__text{
         font-size: 16px;
       }

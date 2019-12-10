@@ -1,5 +1,5 @@
 <template>
-    <div v-html="content" class="rich-text">
+    <div class="rich-text" v-html="content" >
 
     </div>
 </template>
@@ -15,11 +15,13 @@
     }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .rich-text{
-  padding: 10px;
+  width: 98%;
+  margin: 10px auto;
+  /deep/img{
+    max-width: 100%;
+  }
 }
- .rich-text/deep/img{
-   max-height: 100%;
- }
+
 </style>

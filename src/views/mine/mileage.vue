@@ -1,7 +1,7 @@
 <template>
     <div>
-      <div style="width: 100%;overflow-x: hidden;">
-        <div class="first" :style="{'background':'url('+item.background+')no-repeat bottom','background-size':'100% 100%'}" v-for="item in mileageList">
+      <div style="width: 100%;overflow-x: hidden;" class="bg">
+        <div class="first" :style="{'background':'url('+item.background+')no-repeat bottom','background-size': size}" v-for="item in mileageList">
           <div class="one-mileage" v-for="(s,i) in item.list">
             <div class="one-mileage-bg" :style="{'left': s.left+'%', 'background':'url('+s.background+')no-repeat','background-size':'100% 100%'}">
               <img src="../../assets/images/mileage_star.png" alt="">
@@ -21,6 +21,7 @@
         name: "mileage",
       data(){
           return{
+            size:'cover',
             firstBg:require('../../assets/images/mileage_third.png'),
             secondBg:require('../../assets/images/mileage_second.png'),
             thirdBg:require('../../assets/images/mileage_first.png'),
@@ -33,64 +34,19 @@
               },
               {
                 arrow:require('../../assets/images/mileage_desc_left.png'),
-                left: 7
+                left: 0
               },
               {
                 arrow:require('../../assets/images/mileage_desc_left.png'),
-                left: 12
+                left: 0
               },
               {
                 arrow:require('../../assets/images/mileage_desc_left.png'),
-                left: 12
+                left: 5
               },
               {
                 arrow:require('../../assets/images/mileage_desc_left.png'),
-                left: 9
-              },
-              {
-                arrow:require('../../assets/images/mileage_desc.png'),
-                left: 50
-              },
-              {
-                arrow:require('../../assets/images/mileage_desc.png'),
-                left: 40
-              },
-            ],
-
-            secondMileage:[
-              {
-                arrow:require('../../assets/images/mileage_desc.png'),
-                left: 32
-              },
-              {
-                arrow:require('../../assets/images/mileage_desc.png'),
-                left: 31
-              },
-              {
-                arrow:require('../../assets/images/mileage_desc.png'),
-                left: 34
-              },
-              {
-                arrow:require('../../assets/images/mileage_desc.png'),
-                left: 42
-              },
-              {
-                arrow:require('../../assets/images/mileage_desc_left.png'),
-                left: 7
-              },
-              {
-                arrow:require('../../assets/images/mileage_desc_left.png'),
-                left: 12
-              },
-              {
-                arrow:require('../../assets/images/mileage_desc_left.png'),
-                left: 16
-              },
-            ],
-            thirdMileage:[
-              {
-                arrow:require('../../assets/images/mileage_desc_left.png'),
-                left: 18
+                left: 15
               },
               {
                 arrow:require('../../assets/images/mileage_desc_left.png'),
@@ -98,11 +54,56 @@
               },
               {
                 arrow:require('../../assets/images/mileage_desc_left.png'),
-                left: 22
+                left: 19
+              },
+            ],
+
+            secondMileage:[
+              {
+                arrow:require('../../assets/images/mileage_desc_left.png'),
+                left: 17
+              },
+              {
+                arrow:require('../../assets/images/mileage_desc_left.png'),
+                left: 13
+              },
+              {
+                arrow:require('../../assets/images/mileage_desc_left.png'),
+                left: 0
               },
               {
                 arrow:require('../../assets/images/mileage_desc.png'),
-                left: 50
+                left: 42
+              },
+              {
+                arrow:require('../../assets/images/mileage_desc.png'),
+                left: 35
+              },
+              {
+                arrow:require('../../assets/images/mileage_desc.png'),
+                left: 27
+              },
+              {
+                arrow:require('../../assets/images/mileage_desc.png'),
+                left: 27
+              },
+            ],
+            thirdMileage:[
+              {
+                arrow:require('../../assets/images/mileage_desc.png'),
+                left: 40
+              },
+              {
+                arrow:require('../../assets/images/mileage_desc_left.png'),
+                left: 0
+              },
+              {
+                arrow:require('../../assets/images/mileage_desc_left.png'),
+                left: 5
+              },
+              {
+                arrow:require('../../assets/images/mileage_desc_left.png'),
+                left: 10
               },
               {
                 arrow:require('../../assets/images/mileage_desc_left.png'),
@@ -114,21 +115,21 @@
               },
               {
                 arrow:require('../../assets/images/mileage_desc_left.png'),
-                left: 4
+                left: 0
               },
             ],
             fourthMileage:[
               {
-                arrow:require('../../assets/images/mileage_desc_left.png'),
-                left: 18
+                arrow:require('../../assets/images/mileage_desc.png'),
+                left: 45
               },
               {
-                arrow:require('../../assets/images/mileage_desc_left.png'),
-                left: 20
+                arrow:require('../../assets/images/mileage_desc.png'),
+                left: 42
               },
               {
-                arrow:require('../../assets/images/mileage_desc_left.png'),
-                left: 22
+                arrow:require('../../assets/images/mileage_desc.png'),
+                left: 38
               },
               {
                 arrow:require('../../assets/images/mileage_desc.png'),
@@ -168,13 +169,18 @@
       },
       created(){
         this.getMileage();
+        let width = document.documentElement.clientWidth;
+        console.log(width);
+        if (width > 375) {
+          this.size = '100% 100%'
+        }
       },
       methods:{
           getMileage(){
             let user = JSON.parse(localStorage.getItem('runye_user'));
             this.$get(`/timeAxis/list?memberId=${user.memberId}&pageNum=1&pageSize=100`,{},res => {
               if (res) {
-                let list = res.data.data.list;
+                let list = res.data.data.list.reverse();
                 let arr = [];
                 let arr1 = [];
                 let num = 7;
@@ -232,31 +238,9 @@
                      }
                    }
                 });
-                console.log(arr1);
-
-                // console.log(arr1);
-                // arr1.map((s,i) => {
-                //   if (s.length === 2) {
-                //     arr1[i][0].background = this.firstBg;
-                //     arr1[i][1].background = this.secondBg;
-                //     arr1[i][0].list.map((item,index) => {
-                //       arr1[i][0].list[index].background = this.firstMileage[index].arrow;
-                //       arr1[i][0].list[index].left = this.firstMileage[index].left;
-                //     });
-                //     arr1[i][1].list.map((item,index) => {
-                //       arr1[i][1].list[index].background = this.secondMileage[index].arrow
-                //       arr1[i][1].list[index].left = this.secondMileage[index].left;
-                //     });
-                //   } else if (s.length === 1) {
-                //     arr1[i][0].background = this.firstBg;
-                //     arr1[i][0].list.map((item,index) => {
-                //       arr1[i][0].list[index].background = this.firstMileage[index].arrow
-                //       arr1[i][0].list[index].left = this.firstMileage[index].left;
-                //     })
-                //   } else if (s.length > 2) {
-                //
-                //   }
-                // });
+                arr1.map((s,i) => {
+                  arr1[i].list = s.list.reverse();
+                });
                 console.log(arr1);
 
                 this.mileageList = arr1.reverse();
@@ -322,5 +306,8 @@
         }
       }
     }
+  }
+  .bg{
+    background: url("../../assets/images/mileage_third.png");
   }
 </style>
