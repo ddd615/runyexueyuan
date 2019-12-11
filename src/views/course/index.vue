@@ -25,7 +25,7 @@
           <van-col span="19" style="height: 90vh;overflow: auto;padding-bottom: 50px;">
             <div class="layout-right">
               <div class="card" v-for="item in courseList" @click="toDetail(item)">
-                <img :src="item.mainPic" alt="" width="100%" height="100%">
+                <img :src="item.mainPic" alt="" width="100%" height="100%" style="object-fit: cover">
                 <div class="card-num">
                   <p>{{item.name}}</p>
                   <p>编号：{{item.id}}</p>

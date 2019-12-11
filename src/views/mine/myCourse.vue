@@ -1,30 +1,32 @@
 <template>
   <van-tabs v-model="active" @change="onChange" @click="onClick" title-active-color="#0085FF" title-inactive-color="#171717" line-width="0px">
     <van-tab title="已报名" >
-      <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-        <van-list
-          v-model="loading"
-          :finished="finished"
-          finished-text="没有更多了"
-          @load="onLoad"
-        >
-        <div class="card" v-for="item in courseList">
-          <div class="card-img">
-            <img :src="item.mainPic" alt="" width="100%" height="100%">
-            <div class="card-num">
-              <p>{{item.courseName}}</p>
-              <p>编号：{{item.courseId}}</p>
+      <div style="height: 93vh;overflow-y: auto">
+        <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+          <van-list
+            v-model="loading"
+            :finished="finished"
+            finished-text="没有更多了"
+            @load="onLoad"
+          >
+            <div class="card" v-for="item in courseList">
+              <div class="card-img">
+                <img :src="item.mainPic" alt="" width="100%" height="100%">
+                <div class="card-num">
+                  <p>{{item.courseName}}</p>
+                  <p>编号：{{item.courseId}}</p>
+                </div>
+              </div>
+              <div class="card-button">
+                <div class="no-sign-in">
+                  <van-button @click="changeStatus(1,item)">签到</van-button>
+                  <van-button @click="changeStatus(0,item)">请假</van-button>
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="card-button">
-            <div class="no-sign-in">
-              <van-button @click="changeStatus(1,item)">签到</van-button>
-              <van-button @click="changeStatus(0,item)">请假</van-button>
-            </div>
-          </div>
-        </div>
-        </van-list>
-      </van-pull-refresh>
+          </van-list>
+        </van-pull-refresh>
+      </div>
     </van-tab>
     <van-tab title="已改期">
       <van-pull-refresh v-model="isLoading" @refresh="onRefresh">

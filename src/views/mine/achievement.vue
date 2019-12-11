@@ -41,8 +41,8 @@
           return{
             isCheck:false,
             gradeList:[],
-            name:'张三',
-            identity:'411329200004291600',
+            name:'',
+            identity:'',
             disabled:false
           }
       },

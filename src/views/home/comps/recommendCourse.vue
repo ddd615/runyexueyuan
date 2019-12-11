@@ -8,7 +8,7 @@
         <img src="../../../assets/images/arrow_right.png" alt="" @click="toMore">
       </div>
       <router-link tag="div" :to="'/course/detail/'+item.id" class="course-list" v-for="item in courseList">
-        <img :src="item.mainPic" alt="">
+        <van-image :src="item.mainPic" fit="cover" alt=""/>
         <div class="course-msg">
           <p>{{item.name}}</p>
           <p>编号：{{item.id}}</p>
@@ -85,25 +85,28 @@
           color: #ffffff;
           left: 6%;
         }
-        @media screen and (min-width: 330px) and (max-width: 413px) {
-          img{
-            width: 92%;
-            height: 155px;
-            border-radius: 12px;
+        /deep/ .van-image{
+          width: 92%;
+          @media screen and (min-width: 330px) and (max-width: 413px) {
+            img{
+
+              height: 155px;
+              border-radius: 12px;
+            }
           }
-        }
-        @media screen and (max-width: 320px) {
-          img{
-            width: 92%;
-            height: 132px;
-            border-radius: 8px;
+          @media screen and (max-width: 320px) {
+            img{
+              width: 92%;
+              height: 132px;
+              border-radius: 8px;
+            }
           }
-        }
-        @media screen and (min-width: 414px) {
-          img{
-            width: 92%;
-            height: 171px;
-            border-radius: 14px;
+          @media screen and (min-width: 414px) {
+            img{
+              width: 92%;
+              height: 171px;
+              border-radius: 14px;
+            }
           }
         }
       }

@@ -9,7 +9,7 @@
       </div>
       <div style="display: flex;flex-wrap: wrap;width: 92%;margin: 0 auto;">
         <div v-for="item in tagList" class="tag">
-          <img :src="item.logo" alt="" v-if="item.logo">
+          <van-image :src="item.logo" alt="" v-if="item.logo"/>
           <img src="../../assets/images/奖章1.png" alt="" v-else>
           <p>{{item.name}}</p>
         </div>
@@ -68,22 +68,25 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-
+    /deep/ .van-image{
+      display: flex;
+      justify-content: center;
+    }
     @media screen and (max-width: 320px) {
-      >img{
+      /deep/img{
         width: 70%;
         height: 71px;
       }
     }
 
     @media screen and (min-width: 325px) and (max-width: 413px) {
-      >img{
+      /deep/img{
         width: 70%;
         height: 86px;
       }
     }
     @media screen and (min-width: 414px) {
-      >img{
+      /deep/img{
         width: 70%;
         height: 93px;
       }

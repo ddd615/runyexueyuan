@@ -34,7 +34,7 @@
           getInform(){
             let user = localStorage.getItem('runye_user');
             if (user) {
-              this.$get(`/notice/list?memberId=${JSON.parse(user.memberId)}&pageNum=${this.pageNum}&pageSize=${this.pageSize}`,
+              this.$get(`/notice/list?memberId=${JSON.parse(user).memberId}&pageNum=${this.pageNum}&pageSize=${this.pageSize}`,
                 {
                 },
                 res => {

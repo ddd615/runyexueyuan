@@ -95,6 +95,9 @@ export default {
             if (res) {
               console.log(res);
               window.location.href = res.data.data.url;
+              setTimeout(()=>{
+                this.$router.push('/home');
+              },2000)
             }else {
               this.$router.push('/home');
             }

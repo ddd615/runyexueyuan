@@ -1,14 +1,16 @@
 <template>
     <div>
       <div style="width: 100%;overflow-x: hidden;" class="bg">
-        <div class="first" :style="{'background':'url('+item.background+')no-repeat bottom','background-size': size}" v-for="item in mileageList">
+        <div class="first" :style="{'background':'url('+item.background+')no-repeat bottom','background-size': size}" v-for="(item,index) in mileageList">
           <div class="one-mileage" v-for="(s,i) in item.list">
             <div class="one-mileage-bg" :style="{'left': s.left+'%', 'background':'url('+s.background+')no-repeat','background-size':'100% 100%'}">
-              <img src="../../assets/images/mileage_star.png" alt="">
-              <span>{{s.type === 1 ? '加入' : '完成'}}{{s.courseName}}</span>
-              <img src="../../assets/images/mileage_star.png" alt="">
+              <img src="../../assets/images/mileage_origin.png" alt="" width="15" height="15" v-if="s.type === 3">
+              <img src="../../assets/images/mileage_star.png" alt="" width="13" height="13" v-else>
+              <span v-if="s.type !== 3">{{s.type === 1 ? '加入' : '完成'}}{{s.courseName}}</span>
+              <span v-else>{{s.courseName}}</span>
+              <img src="../../assets/images/mileage_star.png" alt="" width="13" height="13" v-if="s.type !== 3">
             </div>
-            <p :style="{'font-size':'12px','color':'#ffffff','position':'relative','left':s.left+3+'%','top':'15px'}">{{s.participateCourseTime | formatDate}}</p>
+            <p :style="{'font-size':'10px','color':'#ffffff','position':'relative','left':s.left+3+'%','top':'3vh'}">{{s.participateCourseTime | formatDate}}</p>
           </div>
 
         </div>
@@ -34,42 +36,42 @@
               },
               {
                 arrow:require('../../assets/images/mileage_desc_left.png'),
-                left: 0
+                left: 1
               },
               {
                 arrow:require('../../assets/images/mileage_desc_left.png'),
-                left: 0
+                left: 3
               },
               {
                 arrow:require('../../assets/images/mileage_desc_left.png'),
-                left: 5
+                left: 12
               },
               {
                 arrow:require('../../assets/images/mileage_desc_left.png'),
-                left: 15
+                left: 30
               },
               {
                 arrow:require('../../assets/images/mileage_desc_left.png'),
-                left: 20
+                left: 32
               },
               {
                 arrow:require('../../assets/images/mileage_desc_left.png'),
-                left: 19
+                left: 31
               },
             ],
 
             secondMileage:[
               {
                 arrow:require('../../assets/images/mileage_desc_left.png'),
-                left: 17
+                left: 29
               },
               {
                 arrow:require('../../assets/images/mileage_desc_left.png'),
-                left: 13
+                left: 25
               },
               {
                 arrow:require('../../assets/images/mileage_desc_left.png'),
-                left: 0
+                left: 18
               },
               {
                 arrow:require('../../assets/images/mileage_desc.png'),
@@ -95,27 +97,27 @@
               },
               {
                 arrow:require('../../assets/images/mileage_desc_left.png'),
-                left: 0
-              },
-              {
-                arrow:require('../../assets/images/mileage_desc_left.png'),
-                left: 5
-              },
-              {
-                arrow:require('../../assets/images/mileage_desc_left.png'),
                 left: 10
               },
               {
                 arrow:require('../../assets/images/mileage_desc_left.png'),
-                left: 6
+                left: 16
               },
               {
                 arrow:require('../../assets/images/mileage_desc_left.png'),
-                left: 3
+                left: 22
               },
               {
                 arrow:require('../../assets/images/mileage_desc_left.png'),
-                left: 0
+                left: 18
+              },
+              {
+                arrow:require('../../assets/images/mileage_desc_left.png'),
+                left: 14
+              },
+              {
+                arrow:require('../../assets/images/mileage_desc_left.png'),
+                left: 10
               },
             ],
             fourthMileage:[
@@ -129,23 +131,23 @@
               },
               {
                 arrow:require('../../assets/images/mileage_desc.png'),
-                left: 38
+                left: 40
               },
               {
                 arrow:require('../../assets/images/mileage_desc.png'),
-                left: 50
+                left: 40
               },
               {
-                arrow:require('../../assets/images/mileage_desc_left.png'),
-                left: 6
+                arrow:require('../../assets/images/mileage_desc.png'),
+                left: 36
               },
               {
-                arrow:require('../../assets/images/mileage_desc_left.png'),
-                left: 3
+                arrow:require('../../assets/images/mileage_desc.png'),
+                left: 32
               },
               {
-                arrow:require('../../assets/images/mileage_desc_left.png'),
-                left: 4
+                arrow:require('../../assets/images/mileage_desc.png'),
+                left: 28
               },
             ]
           }
@@ -170,10 +172,12 @@
       created(){
         this.getMileage();
         let width = document.documentElement.clientWidth;
+        let height = document.documentElement.clientHeight;
         console.log(width);
-        if (width > 375) {
-          this.size = '100% 100%'
-        }
+        console.log(height);
+        // if (width > 375) {
+        //   this.size = '100% 100%'
+        // }
       },
       methods:{
           getMileage(){
@@ -181,13 +185,21 @@
             if (user) {
               this.$get(`/timeAxis/list?memberId=${JSON.parse(user).memberId}&pageNum=1&pageSize=100`,{},res => {
                 if (res) {
-                  let list = res.data.data.list.reverse();
+                  let obj = {
+                    participateCourseTime:res.data.data.list[0].firstLoginTime,
+                    courseName:'账号注册成功，开始修炼',
+                    type:3
+                  }
+
+                  let list = res.data.data.list;
+                  list.push(obj);
+
                   let arr = [];
                   let arr1 = [];
                   let num = 7;
                   let num1 = 3;
                   arr.push([]);
-                  list.map((s,i) => {
+                  list.reverse().map((s,i) => {
                     if (i<num) {
                       arr[num/7-1].push(s);
                     } else {
@@ -239,9 +251,9 @@
                       }
                     }
                   });
-                  arr1.map((s,i) => {
-                    arr1[i].list = s.list.reverse();
-                  });
+                  // arr1.map((s,i) => {
+                  //   arr1[i].list = s.list.reverse();
+                  // });
                   console.log(arr1);
 
                   this.mileageList = arr1.reverse();
@@ -256,30 +268,52 @@
 
 <style lang="less" scoped>
   .first{
-    /*height: 100vh;*/
+    height: 100vh;
     background-size: 100% 100%;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-start;
     .one-mileage{
-      height: 81.7px;
+      height: 14.28vh;
       .one-mileage-bg{
-        padding: 0 10px;
-        display: inline-block;
-        background: url("../../assets/images/mileage_desc_left.png")no-repeat;
-        background-size: 100% 100%;
-        position: relative;
-        top: 40.85px;
-        transform: translateY(-20.425px);
+        @media screen and (max-width: 320px) {
+          padding: 0 10px;
+          width: 110px;
+          height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          background: url("../../assets/images/mileage_desc_left.png")no-repeat;
+          background-size: 100% 100%;
+          position: relative;
+          top: 7.14vh;
+          transform: translateY(-3.57vh);
+        }
+        @media screen and (min-width: 321px) {
+          padding: 0 10px;
+          width: 130px;
+          height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          background: url("../../assets/images/mileage_desc_left.png")no-repeat;
+          background-size: 100% 100%;
+          position: relative;
+          top: 7.14vh;
+          transform: translateY(-3.57vh);
+        }
         @media screen and (max-width: 340px) {
           >span{
             display: inline-block;
-            padding: 10px 0;
-            font-size: 9px;
+
+            font-size: 10px;
             color: #ffffff;
           }
         }
         @media screen and (min-width: 341px){
           >span{
             display: inline-block;
-            padding: 10px 0;
+
             font-size: 11px;
             color: #ffffff;
           }
@@ -311,6 +345,6 @@
     }
   }
   .bg{
-    background: url("../../assets/images/mileage_third.png");
+    /*background: url("../../assets/images/mileage_third.png");*/
   }
 </style>
