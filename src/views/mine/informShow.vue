@@ -15,12 +15,15 @@
       },
       methods:{
           getDetail(){
-            let user = JSON.parse(localStorage.getItem('runye_user'));
-            this.$get(`/notice/info/${this.$route.query.id}/${user.memberId}`,{},res => {
-              if (res) {
-                this.desc = res.data.data.content;
-              }
-            })
+            let user = localStorage.getItem('runye_user');
+            if (user) {
+              this.$get(`/notice/info/${this.$route.query.id}/${JSON.parse(user).memberId}`,{},res => {
+                if (res) {
+                  this.desc = res.data.data.content;
+                }
+              })
+            }
+
           }
       }
     }

@@ -18,6 +18,9 @@
       components:{
         homeNav,banner,recommendCourse,homeFooter,moreCourse
       },
+      created() {
+
+      }
     }
 </script>
 

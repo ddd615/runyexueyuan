@@ -310,30 +310,36 @@
       },
       methods:{
           getCertificate(){
-            let user = JSON.parse(localStorage.getItem('runye_user'));
-            this.$get(`/certificate/list?pageNum=${this.pageNum}&pageSize=99&memberId=${user.memberId}`,
-              {
-              },
-              res => {
-              if (res) {
-                this.certificateList = res.data.data.list;
+            let user = localStorage.getItem('runye_user');
+            if (user) {
+              this.$get(`/certificate/list?pageNum=${this.pageNum}&pageSize=99&memberId=${JSON.parse(user).memberId}`,
+                {
+                },
+                res => {
+                  if (res) {
+                    this.certificateList = res.data.data.list;
 
-              }
-              }
-            )
+                  }
+                }
+              )
+            }
+
           },
         getDetail(){
-            let user = JSON.parse(localStorage.getItem('runye_user'))
-            this.$get('/member/info/'+user.memberId,{},res => {
-              this.userInfo = res.data.data;
-              this.userInfo.sex = this.formatSex(res.data.data.sex);
-              this.userInfo.typeId = this.formatIdentity(res.data.data.typeId);
-              this.userInfo.educationId = this.formatEducation(res.data.data.educationId);
-              if (this.userInfo.mainPic){
-                this.hasPic = true;
-              }
+            let user = localStorage.getItem('runye_user');
+            if (user) {
+              this.$get('/member/info/'+JSON.parse(user).memberId,{},res => {
+                this.userInfo = res.data.data;
+                this.userInfo.sex = this.formatSex(res.data.data.sex);
+                this.userInfo.typeId = this.formatIdentity(res.data.data.typeId);
+                this.userInfo.educationId = this.formatEducation(res.data.data.educationId);
+                if (this.userInfo.mainPic){
+                  this.hasPic = true;
+                }
 
-            })
+              })
+            }
+
         },
         edit(){
             this.disabled = false;
@@ -474,40 +480,43 @@
 
         },
         saveCertification(){
-            let user = JSON.parse(localStorage.getItem('runye_user'));
-            this.certification.memberId = user.memberId;
-            if (this.certification.id) {
-              this.$post('/certificate/update',
-                {
-                  expireTime:this.changeTimes(this.outDate),
-                  term:this.changeTime(this.startTime)+','+this.changeTime(this.endTime),
-                  memberId:user.memberId,
-                  mainPic:this.certification.mainPic,
-                  name:this.certification.name,
-                  id:this.certification.id,
-                },res => {
-                if (res) {
-                  this.$toast('修改成功');
-                  this.getCertificate();
-                  this.isEdit = false;
-                }
-                })
-            } else {
-              this.$post('/certificate/save',
-                {
-                  expireTime:this.changeTime(this.outDate)+' 00:00:00',
-                  term:this.changeTime(this.startTime)+','+this.changeTime(this.endTime),
-                  memberId:user.memberId,
-                  mainPic:this.certification.mainPic,
-                  name:this.certification.name
-                },res => {
-                  if (res) {
-                    this.$toast('保存成功');
-                    this.isEdit = false;
-                    this.getCertificate();
-                  }
-                })
+            let user = localStorage.getItem('runye_user');
+            if (user) {
+              this.certification.memberId = JSON.parse(user).memberId;
+              if (this.certification.id) {
+                this.$post('/certificate/update',
+                  {
+                    expireTime:this.changeTimes(this.outDate),
+                    term:this.changeTime(this.startTime)+','+this.changeTime(this.endTime),
+                    memberId:JSON.parse(user).memberId,
+                    mainPic:this.certification.mainPic,
+                    name:this.certification.name,
+                    id:this.certification.id,
+                  },res => {
+                    if (res) {
+                      this.$toast('修改成功');
+                      this.getCertificate();
+                      this.isEdit = false;
+                    }
+                  })
+              } else {
+                this.$post('/certificate/save',
+                  {
+                    expireTime:this.changeTime(this.outDate)+' 00:00:00',
+                    term:this.changeTime(this.startTime)+','+this.changeTime(this.endTime),
+                    memberId:JSON.parse(user).memberId,
+                    mainPic:this.certification.mainPic,
+                    name:this.certification.name
+                  },res => {
+                    if (res) {
+                      this.$toast('保存成功');
+                      this.isEdit = false;
+                      this.getCertificate();
+                    }
+                  })
+              }
             }
+
         },
         confirmStartTime(val){
 

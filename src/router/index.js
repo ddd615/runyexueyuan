@@ -8,7 +8,7 @@ Vue.use(Router)
 const routes = [
   {
     path: '/',
-    redirect: '/login'
+    redirect:'/login'
   },
   {
     path: '/login',
@@ -179,12 +179,12 @@ router.beforeEach((to,from,next)=>{
 
   window.document.title = to.meta.title || "闰业";
   let user = localStorage.getItem('runye_user')
-  if (!to.meta.isAuthority && !user) {
-    next({path:'/login'})
-  } else {
-    next()
-  }
-
+  // if (!to.meta.isAuthority && !user) {
+  //   next({path:'/login'})
+  // } else {
+  //   next()
+  // }
+    next();
 });
 
 export default router

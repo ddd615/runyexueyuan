@@ -4,7 +4,7 @@ import store from '@/store';
 import vant from 'vant';
 import router from '@/router'
 import {Toast} from "vant";
-
+import {post} from './index'
 
 Vue.use(vant)
 
@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === 'development') {
 } else {
   // 生产环境下
   service = axios.create({
-    baseURL: '/' // api的base_url
+    baseURL: 'http://rypxapi.mdsoftware.cn' // api的base_url
   });
 }
 
@@ -81,7 +81,18 @@ service.interceptors.response.use(
     store.commit('hideLoading');
     if (response.data.code === 0){
       return response;
-    }else {
+    }else if (response.data.code === 9000) {
+      post('/wechat/redirect',
+        {
+          returnUrl: 'http://rypxhtml.mdsoftware.cn'
+        },
+        res => {
+          if (res) {
+
+            window.location.href = res.data.data.url;
+          }
+        })
+    } else {
       Toast(response.data.msg);
     }
 

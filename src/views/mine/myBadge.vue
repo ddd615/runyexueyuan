@@ -29,8 +29,11 @@
           }
       },
       created() {
-          let user = JSON.parse(localStorage.getItem('runye_user'));
-          this.userInfo = user;
+          let user = localStorage.getItem('runye_user');
+          if (user) {
+            this.userInfo = JSON.parse(user);
+          }
+
           this.getTag();
       },
       methods:{

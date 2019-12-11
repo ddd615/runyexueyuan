@@ -72,14 +72,37 @@ export default {
       btntxt:'发送验证码',
       time:60,
       disable:false,
-      captcha: ''
+      captcha: '',
+      openId:''
     }
   },
   created(){
     let user = localStorage.getItem('runye_user');
     if (user){
       this.$router.replace({path:'/home'});
+    }else {
+      let url = window.location.href;
+      if (url.indexOf('openId') >= 0) {
+        console.log(url);
+        this.openId = url.split('openId=')[1];
+
+      } else {
+        this.$post('/wechat/redirect',
+          {
+            returnUrl: url
+          },
+          res => {
+            if (res) {
+              console.log(res);
+              window.location.href = res.data.data.url;
+            }else {
+              this.$router.push('/home');
+            }
+          }
+        )
+      }
     }
+
   },
   methods:{
     sendCode(){
@@ -133,7 +156,8 @@ export default {
           {
             mobile:this.registerPhone,
             password:this.registerPassword,
-            captcha:this.phoneCode
+            captcha:this.phoneCode,
+            openId : this.openId
           },
           res => {
             if (res.data.msg === '执行成功') {
@@ -160,7 +184,8 @@ export default {
           '/outer/login',
           {
             mobile:this.phone,
-            password:this.password
+            password:this.password,
+            openId:this.openId
           },
           res => {
             if (res.data.msg === '执行成功') {

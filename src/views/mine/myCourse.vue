@@ -155,7 +155,8 @@
       },
       methods:{
           getMyCourse(){
-            let user = JSON.parse(localStorage.getItem('runye_user'));
+            let user = localStorage.getItem('runye_user');
+
             let isRescheduling;
             if (this.active === 0) {
               isRescheduling = 1;
@@ -166,23 +167,25 @@
             } else if (this.active === 2) {
               isRescheduling = 0;
             }
-            this.$get(`/registration/list?memberId=${user.memberId}&pageNum=${this.pageNum}&pageSize=${this.pageSize}&isRescheduling=${isRescheduling}`,
-              {},res => {
-              if(res) {
-                this.pageNum++;
-                this.courseList = this.courseList.concat(res.data.data.list);
-                if (res.data.data.nextPage === 0) {
-                  this.finished = true
-                }
-                this.isLoading = false;
-                this.loading = false;
-              }else {
-                this.courseList = [];
-                this.isLoading = false;
-                this.loading = false;
-                this.finished = true;
-              }
-            })
+            if (user) {
+              this.$get(`/registration/list?memberId=${JSON.parse(user).memberId}&pageNum=${this.pageNum}&pageSize=${this.pageSize}&isRescheduling=${isRescheduling}`,
+                {},res => {
+                  if(res) {
+                    this.pageNum++;
+                    this.courseList = this.courseList.concat(res.data.data.list);
+                    if (res.data.data.nextPage === 0) {
+                      this.finished = true
+                    }
+                    this.isLoading = false;
+                    this.loading = false;
+                  }else {
+                    this.courseList = [];
+                    this.isLoading = false;
+                    this.loading = false;
+                    this.finished = true;
+                  }
+                })
+            }
           },
         onClick(){
             this.courseList = [];
@@ -199,17 +202,16 @@
             })
         },
         changeStatus(status,item){
-            let user = JSON.parse(localStorage.getItem('runye_user'));
-
-
-                this.$post('/attendance/save',
-                  {
-                    courseId:item.courseId,
-                    lat:this.lat,
-                    lon:this.lng,
-                    memberId: user.memberId,
-                    type:status
-                  },res => {
+            let user = localStorage.getItem('runye_user');
+            if (user) {
+              this.$post('/attendance/save',
+                {
+                  courseId:item.courseId,
+                  lat:this.lat,
+                  lon:this.lng,
+                  memberId: JSON.parse(user).memberId,
+                  type:status
+                },res => {
                   if (res) {
                     if (status === 0) {
                       this.$toast('请假成功');
@@ -217,7 +219,10 @@
                       this.$toast('签到成功');
                     }
                   }
-                  })
+                })
+            }
+
+
 
         },
         onRefresh(){
@@ -233,7 +238,6 @@
             this.finished = false;
         },
         join(status,item,index) {
-            let user = JSON.parse(localStorage.getItem('runye_user'))
             this.$post('/registration/isConfig',
               {
                 id:item.id,

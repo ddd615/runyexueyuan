@@ -28,14 +28,19 @@
       },
       methods:{
           getStatus(){
-            let user = JSON.parse(localStorage.getItem('runye_user'));
-            this.$get(`/notice/isReadList?isRead=0&memberId=${user.memberId}`,{},res => {
-              if (res) {
-                this.isHasNoRead = true;
-              } else {
-                this.isHasNoRead = false;
-              }
-            })
+            let user = localStorage.getItem('runye_user');
+            if (user) {
+              this.$get(`/notice/isReadList?isRead=0&memberId=${JSON.parse(user).memberId}`,{},res => {
+                if (res) {
+                  this.isHasNoRead = true;
+                } else {
+                  this.isHasNoRead = false;
+                }
+              })
+            }else {
+              console.log('还没有登陆');
+            }
+
           }
       }
     }

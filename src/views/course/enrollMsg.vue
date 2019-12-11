@@ -109,7 +109,6 @@
           }
       },
       created(){
-        let user =JSON.parse(localStorage.getItem('runye_user'))
         this.getDetail();
       },
       filters:{
@@ -177,26 +176,29 @@
           return val;
         },
         getDetail(){
-          let user = JSON.parse(localStorage.getItem('runye_user'));
-          this.$get('/member/info/'+user.memberId,{},res => {
+          let user = localStorage.getItem('runye_user');
+          if (user) {
+            this.$get('/member/info/'+JSON.parse(user).memberId,{},res => {
 
-            this.userInfo = res.data.data;
-            this.userInfo.sex = this.formatSex(res.data.data.sex);
-            this.userInfo.typeId = this.formatIdentity(res.data.data.typeId);
-            this.userInfo.educationId = this.formatEducation(res.data.data.educationId);
-            // this.userInfo.id = userInfo.id;
-            // this.userInfo.name = userInfo.name || '';
-            // this.userInfo.sex = userInfo.sex || '';
-            // this.userInfo.typeId = userInfo.typeId;
-            // this.userInfo.identity = userInfo.identity || '';
-            // this.userInfo.educationId = userInfo.educationId;
-            // this.userInfo.major = userInfo.major;
-            // this.userInfo.mailbox = userInfo.mailbox;
-            // this.userInfo.mainPic = userInfo.mainPic || true;
-            // this.userInfo.otherInfo = userInfo.otherInfo;
+              this.userInfo = res.data.data;
+              this.userInfo.sex = this.formatSex(res.data.data.sex);
+              this.userInfo.typeId = this.formatIdentity(res.data.data.typeId);
+              this.userInfo.educationId = this.formatEducation(res.data.data.educationId);
+              // this.userInfo.id = userInfo.id;
+              // this.userInfo.name = userInfo.name || '';
+              // this.userInfo.sex = userInfo.sex || '';
+              // this.userInfo.typeId = userInfo.typeId;
+              // this.userInfo.identity = userInfo.identity || '';
+              // this.userInfo.educationId = userInfo.educationId;
+              // this.userInfo.major = userInfo.major;
+              // this.userInfo.mailbox = userInfo.mailbox;
+              // this.userInfo.mainPic = userInfo.mainPic || true;
+              // this.userInfo.otherInfo = userInfo.otherInfo;
 
-            console.log(this.userInfo);
-          })
+              console.log(this.userInfo);
+            })
+          }
+
         },
         onEducationSelect(val){
           this.userInfo.educationId = val;
@@ -216,28 +218,31 @@
           // this.userInfo.mainPic = file.content;
         },
         submit(){
-          let user = JSON.parse(localStorage.getItem('runye_user'));
+          let user = localStorage.getItem('runye_user');
+
           this.userInfo.sex = this.formatSex(this.userInfo.sex);
           this.userInfo.typeId = this.formatIdentity(this.userInfo.typeId);
           this.userInfo.educationId = this.formatEducation(this.userInfo.educationId);
-          this.$post('/member/update',this.userInfo,res => {
+          if (user) {
+            this.$post('/member/update',this.userInfo,res => {
 
-            //报名信息
-            this.getDetail();
-            this.$post('/registration/save',
-              {
-                courseId:this.$route.query.id,
-                memberId:user.memberId,
-              },
-              res => {
-              if (res) {
-                this.$toast('报名成功');
-                this.$router.go(-1);
-              }
+              //报名信息
+              this.getDetail();
+              this.$post('/registration/save',
+                {
+                  courseId:this.$route.query.id,
+                  memberId:JSON.parse(user).memberId,
+                },
+                res => {
+                  if (res) {
+                    this.$toast('报名成功');
+                    this.$router.go(-1);
+                  }
 
-              }
-            )
-          })
+                }
+              )
+            })
+          }
         },
 
       }

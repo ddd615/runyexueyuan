@@ -32,26 +32,36 @@
       },
       methods:{
           getInform(){
-            let user = JSON.parse(localStorage.getItem('runye_user'));
-            this.$get(`/notice/list?memberId=${user.memberId}&pageNum=${this.pageNum}&pageSize=${this.pageSize}`,
-              {
-              },
-              res => {
-              this.informList = res.data.data.list;
-              }
-            )
+            let user = localStorage.getItem('runye_user');
+            if (user) {
+              this.$get(`/notice/list?memberId=${JSON.parse(user.memberId)}&pageNum=${this.pageNum}&pageSize=${this.pageSize}`,
+                {
+                },
+                res => {
+                  this.informList = res.data.data.list;
+                }
+              )
+            } else {
+
+            }
+
           },
         toDetail(item){
             this.$router.push({path:'/mine/informShow',query:{id:item.id}});
         },
         confirm(item,index){
-            let user = JSON.parse(localStorage.getItem('runye_user'));
-            this.$get(`/notice/confirm/${item.id}/${user.memberId}`,{},res => {
-              if (res) {
-                this.$toast('已确定');
-                this.informList[index].isConfirm = 1;
-              }
-            })
+            let user = localStorage.getItem('runye_user');
+            if (user) {
+              this.$get(`/notice/confirm/${item.id}/${JSON.parse(user).memberId}`,{},res => {
+                if (res) {
+                  this.$toast('已确定');
+                  this.informList[index].isConfirm = 1;
+                }
+              })
+            }else {
+
+            }
+
         }
 
       }

@@ -16,7 +16,11 @@
           }
       },
       created() {
-          this.userInfo = JSON.parse(localStorage.getItem('runye_user'));
+          let user = localStorage.getItem('runye_user');
+          if (user) {
+            this.userInfo = JSON.parse(user);
+          }
+
 
       }
     }

@@ -54,55 +54,61 @@
 
       },
       created() {
-          console.log()
-        let user = JSON.parse(localStorage.getItem('runye_user'));
-        this.mobile = user.mobile;
-        this.accessToken = user.accessToken;
+
+        let user = localStorage.getItem('runye_user');
+        if (user) {
+          this.mobile = JSON.parse(user).mobile;
+          this.accessToken = JSON.parse(user).accessToken;
+        }
+
       },
       methods:{
         save(){
-          let user = JSON.parse(localStorage.getItem('runye_user'))
-          this.$post(
-            '/member/update',
-            {
-              company:this.company,
-              unit:this.unit,
-              name:this.name,
-              mobile:this.mobile,
-              mailbox:this.mailbox,
-              id:user.memberId,
-              "address": "",
-              "age": 0,
-              "certificateId": "",
-              "courseId": 0,
-              "courseName": "",
-              "courseNumberId": 0,
-              "educationId": 0,
-              "educationName": "",
-              "identity": "",
-              "isInside": "",
-              "mainPic": "",
-              "major": "",
-              "nativePlace": "",
-              "openId": "",
-              "otherInfo": "",
-              "password": "",
-              "receipt": 0,
-              "remark": "",
-              "sex": 0,
-              "shool": "",
-              "tagIds": "",
-              "tagNames": "",
-              "typeId": 0,
-              "typeName": "",
-              "username": "",
-              "zhouqi": ""
-            },
-            res => {
-              this.$toast('保存成功');
-              this.$router.replace({path:'/home'});
-            }
+          let user = localStorage.getItem('runye_user');
+          if (user) {
+            this.$post(
+              '/member/update',
+              {
+                company:this.company,
+                unit:this.unit,
+                name:this.name,
+                mobile:this.mobile,
+                mailbox:this.mailbox,
+                id:JSON.parse(user).memberId,
+                "address": "",
+                "age": 0,
+                "certificateId": "",
+                "courseId": 0,
+                "courseName": "",
+                "courseNumberId": 0,
+                "educationId": 0,
+                "educationName": "",
+                "identity": "",
+                "isInside": "",
+                "mainPic": "",
+                "major": "",
+                "nativePlace": "",
+                "openId": "",
+                "otherInfo": "",
+                "password": "",
+                "receipt": 0,
+                "remark": "",
+                "sex": 0,
+                "shool": "",
+                "tagIds": "",
+                "tagNames": "",
+                "typeId": 0,
+                "typeName": "",
+                "username": "",
+                "zhouqi": ""
+              },
+              res => {
+                this.$toast('保存成功');
+                this.$router.replace({path:'/home'});
+              }
             )
+          }
+
         }
       }
     }

@@ -20,15 +20,19 @@
       },
       methods:{
         logout(){
-          let user = JSON.parse(localStorage.getItem('runye_user'));
+          let user = localStorage.getItem('runye_user');
+          if (user) {
+            this.$post('/outer/logout',{token:JSON.parse(user).accessToken},res => {
+              if (res) {
+                localStorage.removeItem('runye_user');
+                this.$toast('退出成功');
+                this.$router.push({path:'/login'});
+              }
+            })
+          } else {
+            this.$toast('您没有登录哦！');
+          }
 
-          this.$post('/outer/logout',{token:user.accessToken},res => {
-            if (res) {
-              localStorage.removeItem('runye_user');
-              this.$toast('退出成功');
-              this.$router.push({path:'/login'});
-            }
-          })
         }
       }
     }
