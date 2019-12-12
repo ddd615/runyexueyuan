@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === 'development') {
 } else {
   // 生产环境下
   service = axios.create({
-    baseURL: 'http://rypxapi.mdsoftware.cn' // api的base_url
+    baseURL: '/' // api的base_url
   });
 }
 
@@ -65,7 +65,7 @@ service.interceptors.request.use(
       // config.data = qs.stringify(config.data);
       config.data = formData;
     }
-
+    console.log(config);
     return config;
   },
   error => {
@@ -79,22 +79,29 @@ service.interceptors.response.use(
   response => {
     // console.log(response.data.code);
     store.commit('hideLoading');
-    if (response.data.code === 0){
-      return response;
-    }else if (response.data.code === 9000) {
-      post('/wechat/redirect',
-        {
-          returnUrl: 'http://rypxhtml.mdsoftware.cn'
-        },
-        res => {
-          if (res) {
 
-            window.location.href = res.data.data.url;
-          }
-        })
-    } else {
-      Toast(response.data.msg);
+    switch (response.data.code) {
+      case 0 :
+        return response;break;
+      case 9000 :
+        Toast('您的登录失效了，请重新登录');
+        localStorage.removeItem('runye_user');
+        post('/wechat/redirect',
+          {
+            returnUrl: 'http://rypxhtml.mdsoftware.cn/#/login'
+          },
+          res => {
+            if (res) {
+
+              window.location.href = res.data.data.url;
+            }
+          });
+        break;
+      case 404 :
+        break;
+      default:  Toast(response.data.msg);break;
     }
+
 
   },
 

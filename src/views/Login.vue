@@ -97,7 +97,7 @@ export default {
               window.location.href = res.data.data.url;
               setTimeout(()=>{
                 this.$router.push('/home');
-              },2000)
+              },5000)
             }else {
               this.$router.push('/home');
             }
@@ -192,6 +192,7 @@ export default {
           },
           res => {
             if (res.data.msg === '执行成功') {
+
               let user =  res.data.data;
               this.$store.commit('SAVE_ITEM',{
                 user:user
