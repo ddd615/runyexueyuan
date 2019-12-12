@@ -96,14 +96,14 @@
           }
           @media screen and (max-width: 320px) {
             img{
-              width: 92%;
+
               height: 132px;
               border-radius: 8px;
             }
           }
           @media screen and (min-width: 414px) {
             img{
-              width: 92%;
+
               height: 171px;
               border-radius: 14px;
             }

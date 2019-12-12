@@ -1,5 +1,12 @@
 <template>
     <div class="inform">
+      <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+        <van-list
+          v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+          @load="onLoad"
+        >
       <div class="inform-card" v-for="(item,index) in informList" >
         <div class="card-header" @click="toDetail(item)">
           <img src="../../assets/images/通知.png" alt="">
@@ -14,6 +21,8 @@
           <van-button :disabled="item.isConfirm === 1" @click.stop="confirm(item,index)">我知道了</van-button>
         </div>
       </div>
+        </van-list>
+      </van-pull-refresh>
     </div>
 </template>
 
@@ -25,10 +34,14 @@
             informList:[],
             pageNum:1,
             pageSize:10,
+            isLoading:false,
+            loading:false,
+            finished:false,
+
           }
       },
       created() {
-          this.getInform();
+
       },
       methods:{
           getInform(){
@@ -38,7 +51,20 @@
                 {
                 },
                 res => {
-                  this.informList = res.data.data.list;
+                  if (res) {
+                    this.pageNum++;
+                    this.informList = this.informList.concat(res.data.data.list);
+                    if (res.data.data.nextPage === 0) {
+                      this.finished = true;
+                    }
+                    this.loading = false;
+                    this.isLoading = false;
+                  }else {
+                    this.loading = false;
+                    this.isLoading = false;
+                    this.finished = true;
+                  }
+
                 }
               )
             } else {
@@ -62,8 +88,16 @@
 
             }
 
+        },
+        onRefresh(){
+          this.pageNum = 1;
+          this.informList = [];
+          this.finished = false;
+          this.getInform();
+        },
+        onLoad(){
+          this.getInform();
         }
-
       }
     }
 </script>
