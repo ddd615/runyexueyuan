@@ -31,6 +31,29 @@
         required
       />
       <van-field
+        v-model="typeId"
+        required
+        label="证件类型："
+        is-link
+        input-align="right"
+        @click="identityTypePicker = true"
+      />
+      <van-field
+        v-model="identity"
+        required
+        label="证件号码："
+        type="number"
+        input-align="right"
+      />
+      <van-cell title="电子照片（白底彩照）：">
+        <template>
+          <van-uploader :after-read="afterRead" >
+            <img src="../../assets/images/add_photo.png" alt="" v-if="!mainPic">
+            <img :src="mainPic" alt="" v-else width="86" height="78">
+          </van-uploader>
+        </template>
+      </van-cell>
+      <van-field
         label="邮箱:"
         input-align="right"
         v-model="mailbox"
@@ -39,6 +62,14 @@
       />
       <van-button type="primary" size="large" @click="save">保存</van-button>
     </van-cell-group>
+    <van-popup v-model="identityTypePicker" position="bottom">
+      <van-picker
+        show-toolbar
+        :columns="identityTypeList"
+        @cancel="identityTypePicker = false"
+        @confirm="onTypeSelect"
+      />
+    </van-popup>
   </div>
 </template>
 
@@ -53,6 +84,11 @@
             mobile:'',
             mailbox:'',
             accessToken:'',
+            mainPic:'',
+            identity:'',
+            typeId:'',
+            identityTypePicker:false,
+            identityTypeList: ['身份证', '港澳通行证', '军官证'],
           }
       },
       computed:{
@@ -81,56 +117,98 @@
               this.$toast('电话不能为空');
             }else if (!this.mailbox){
               this.$toast('邮箱不能为空');
-            } else {
-              this.$post(
-                '/member/update',
-                {
-                  company:this.company,
-                  unit:this.unit,
-                  name:this.name,
-                  mobile:this.mobile,
-                  mailbox:this.mailbox,
-                  id:JSON.parse(user).memberId,
-                  "address": "",
-                  "age": 0,
-                  "certificateId": "",
-                  "courseId": 0,
-                  "courseName": "",
-                  "courseNumberId": 0,
-                  "educationId": 0,
-                  "educationName": "",
-                  "identity": "",
-                  "isInside": "",
-                  "mainPic": "",
-                  "major": "",
-                  "nativePlace": "",
-                  "openId": "",
-                  "otherInfo": "",
-                  "password": "",
-                  "receipt": 0,
-                  "remark": "",
-                  "sex": 0,
-                  "shool": "",
-                  "tagIds": "",
-                  "tagNames": "",
-                  "typeId": 0,
-                  "typeName": "",
-                  "username": "",
-                  "zhouqi": ""
-                },
-                res => {
-                  this.$toast('保存成功');
-                  setTimeout(() => {
-                    this.$router.replace({path:'/home'});
-                  },1000);
+            } else if (!this.typeId) {
+              this.$toast('证件类别不能为空');
+            }else if (!this.identity) {
+              this.$toast('证件号不能为空');
+            }else if (!this.mainPic) {
+              this.$toast('电子图像不能为空');
+            }else {
+                let val = this.typeId;
+                if (val === '身份证') {
+                  this.typeId = 0;
+                } else if (val === '港澳通行证'){
+                  this.typeId = 1;
+                } else if (val === '军官证') {
+                  this.typeId = 2;
                 }
-              )
+                this.$post(
+                  '/member/update',
+                  {
+                    company:this.company,
+                    unit:this.unit,
+                    name:this.name,
+                    mobile:this.mobile,
+                    mailbox:this.mailbox,
+                    id:JSON.parse(user).memberId,
+                    mainPic: this.mainPic,
+                    typeId: this.typeId,
+                    identity: this.identity,
+                    "address": "",
+                    "age": 0,
+                    "certificateId": "",
+                    "courseId": 0,
+                    "courseName": "",
+                    "courseNumberId": 0,
+                    "educationId": 0,
+                    "educationName": "",
+                    "isInside": "",
+                    "major": "",
+                    "memberIds": "",
+                    "nativePlace": "",
+                    "openId": "",
+                    "otherInfo": "",
+                    "password": "",
+                    "receipt": 0,
+                    "remark": "",
+                    "sex": 0,
+                    "shool": "",
+                    "tagIds": "",
+                    "tagNames": "",
+                    "typeName": "",
+                    "username": "",
+                    "zhouqi": "",
+                  },
+                  res => {
+                    if (res) {
+                      this.$toast('保存成功');
+                      setTimeout(() => {
+                        this.$router.replace({path:'/home'});
+                      },1000);
+                    }
+                  }
+                )
+
             }
           }else {
             this.$toast('还没有登录哦');
           }
 
-        }
+        },
+        afterRead(file){
+          let param = new FormData();
+          param.append('file',file.file);
+          this.$post('/file/upload',param,res => {
+
+            if (res) {
+              this.mainPic = res.data.data;
+            }
+
+
+          })
+          // this.userInfo.mainPic = file.content;
+        },
+        onTypeSelect(val){
+          this.typeId = val;
+          // if (val === '身份证') {
+          //   this.userInfo.typeId = 0;
+          // } else if (val === '港澳通行证'){
+          //   this.userInfo.typeId = 1;
+          // } else if (val === '军官证') {
+          //   this.userInfo.typeId = 2;
+          // }
+          this.identityTypePicker = false;
+        },
       }
     }
 </script>

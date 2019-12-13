@@ -1,5 +1,5 @@
 <template>
-    <div class="inform">
+
       <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
         <van-list
           v-model="loading"
@@ -7,23 +7,25 @@
           finished-text="没有更多了"
           @load="onLoad"
         >
-      <div class="inform-card" v-for="(item,index) in informList" >
-        <div class="card-header" @click="toDetail(item)">
-          <img src="../../assets/images/通知.png" alt="">
-          <span>{{item.title}}</span>
-          <div class="red-point" v-if="item.isRead === 0"></div>
-        </div>
-        <p class="card-content" v-html="item.content" @click="toDetail(item)">
+          <div class="inform">
+          <div class="inform-card" v-for="(item,index) in informList" >
+            <div class="card-header" @click="toDetail(item)">
+              <img src="../../assets/images/通知.png" alt="">
+              <span>{{item.title}}</span>
+              <div class="red-point" v-if="item.isRead === 0"></div>
+            </div>
+            <p class="card-content" v-html="item.content" @click="toDetail(item)">
 
-        </p>
-        <div class="card-footer">
-          <p>{{item.createTime}}</p>
-          <van-button :disabled="item.isConfirm === 1" @click.stop="confirm(item,index)">我知道了</van-button>
-        </div>
-      </div>
+            </p>
+            <div class="card-footer">
+              <p>{{item.createTime}}</p>
+              <van-button :disabled="item.isConfirm === 1" @click.stop="confirm(item,index)">我知道了</van-button>
+            </div>
+          </div>
+          </div>
         </van-list>
       </van-pull-refresh>
-    </div>
+
 </template>
 
 <script>
