@@ -88,7 +88,7 @@
             )
           },
         getCourseByParentId(){
-           let parentId = this.categoryList[this.activeKey].parentId;
+           let parentId = this.categoryList[this.activeKey].id;
            this.$get(`/course/listCourseClass?parentId=${parentId}&pageNum=${this.pageNum}&pageSize=1000`,
              {
 
