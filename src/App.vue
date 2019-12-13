@@ -12,6 +12,7 @@ export default {
   components:{
     myLoading
   },
+  
   computed:{
     loading(){
       return this.$store.state.loading

@@ -51,7 +51,7 @@
             keyword:'',
             activeKey:0,
             isInput:true,
-            pageNum:1,
+            pageNum:0,
             categoryList:[],
             courseList:[],
             loading:false,
@@ -79,7 +79,7 @@
             this.$get('/courseClassification/list',
               {
                 pageNum:this.pageNum,
-                pageSize:10,
+                pageSize:50,
               },
               res => {
               this.categoryList = res.data.data.list;
@@ -108,7 +108,7 @@
 
         },
         onSearch(){
-            this.$get('/course/listCourseName?name='+this.keyword+'&pageNum=1&pageSize=99',
+            this.$get('/course/listCourseName?name='+this.keyword+'&pageNum=0&pageSize=99',
               {
               },
               res => {

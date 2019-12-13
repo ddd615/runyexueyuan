@@ -120,7 +120,9 @@
                 },
                 res => {
                   this.$toast('保存成功');
-                  this.$router.replace({path:'/home'});
+                  setTimeout(() => {
+                    this.$router.replace({path:'/home'});
+                  },1000);
                 }
               )
             }

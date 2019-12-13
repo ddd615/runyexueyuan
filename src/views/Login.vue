@@ -163,14 +163,16 @@ export default {
             openId : this.openId
           },
           res => {
-            if (res.data.msg === '执行成功') {
+            if (res) {
               let user =  res.data.data;
               this.$store.commit('SAVE_ITEM',{
                 user:user
               });
               localStorage.setItem('runye_user',JSON.stringify(user));
               this.$toast('注册成功');
-              this.$router.push({path:'/perfectInfo'})
+              setTimeout(() => {
+                this.$router.push({path:'/perfectInfo'})
+              },1000);
             }
           }
         )
