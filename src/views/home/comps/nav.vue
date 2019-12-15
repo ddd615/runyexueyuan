@@ -1,17 +1,17 @@
 <template>
   <div class="home">
-    <router-link tag="div" to="/mine/myCourse" class="nav_left">
+    <div class="nav_left" @click="toPage('/mine/myCourse')">
       <img src="../../../assets/images/签到@3x.png" alt="">
       <p>签到</p>
-    </router-link>
+    </div>
     <div class="nav_center">
       <img src="../../../assets/images/home_nav_logo.png" alt="">
       <span>闰业学院</span>
     </div>
-    <router-link tag="div" to="/mine/inform" class="nav_right">
+    <div class="nav_right" @click="toPage('/mine/inform')">
       <img src="../../../assets/images/通知@3x.png" alt="">
       <div class="red-point" v-if="isHasNoRead"></div>
-    </router-link>
+    </div>
   </div>
 </template>
 
@@ -41,7 +41,23 @@
               console.log('还没有登陆');
             }
 
+          },
+        toPage(path){
+          let user = localStorage.getItem('runye_user');
+          if (user) {
+            this.$router.push({path:path});
+          } else{
+            this.$dialog.confirm({
+              title:'温馨提示',
+              message:'您还没有登录，请先前往登录',
+            }).then(() => {
+              this.$router.push({path:'/login'});
+            }).catch(() => {
+              console.log('取消登录');
+            })
           }
+
+        }
       }
     }
 </script>

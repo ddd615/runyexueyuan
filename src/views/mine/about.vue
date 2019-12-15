@@ -16,7 +16,11 @@
         name: "about",
       data(){
           return{
-            info:{}
+            info:{
+              mobile:'',
+              email:'',
+              address:'',
+            }
           }
       },
       created() {

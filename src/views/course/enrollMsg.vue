@@ -6,44 +6,46 @@
           required
           label="姓名："
           placeholder="请输入姓名"
+          input-align="right"
         />
-        <van-field
-          v-model="userInfo.sex"
-          required
-          label="性别："
-          disabled
+        <van-cell
+          title="性别："
+          :value="sex"
           is-link
+          required
           @click="sexPicker = true"
         />
-        <van-field
-          v-model="userInfo.typeId"
-          required
-          label="证件类型："
-          disabled
+
+        <van-cell
+          title="证件类型："
+          :value="identityType"
           is-link
+          required
           @click="identityTypePicker = true"
         />
         <van-field
           v-model="userInfo.identity"
           required
           label="证件号码："
+          input-align="right"
         />
-        <van-field
-          v-model="userInfo.educationId"
-          required
-          label="学历程度："
-          disabled
+        <van-cell
+          title="学历程度："
+          :value="userInfo.educationName"
           is-link
+          required
           @click="educationPicker = true"
         />
         <van-field
           v-model="userInfo.major"
           label="专业："
+          input-align="right"
         />
         <van-field
           v-model="userInfo.mailbox"
           required
           label="个人电子邮箱："
+          input-align="right"
         />
         <van-cell title="电子照片（白底彩照）：">
           <template>
@@ -105,7 +107,8 @@
             identityTypeList: ['身份证', '港澳通行证', '军官证'],
             educationPicker:false,
             educationList:['初中','高中','大专','本科','硕士','博士'],
-            hasPic:false
+            hasPic:false,
+            sex:'',
           }
       },
       created(){
@@ -126,12 +129,42 @@
       },
       methods:{
         onSexSelect(val){
-          this.userInfo.sex = val
+          this.sex = val;
+          if (val === '男') {
+            this.userInfo.sex = 1;
+          } else {
+            this.userInfo.sex = 2;
+          }
           this.sexPicker = false;
         },
         onTypeSelect(val){
-          this.userInfo.typeId = val;
+          this.identityType = val;
+          if (val === '身份证') {
+            this.userInfo.typeId = 0;
+          } else if (val === '港澳通行证'){
+            this.userInfo.typeId = 1;
+          } else if (val === '军官证') {
+            this.userInfo.typeId = 2;
+          }
           this.identityTypePicker = false;
+        },
+        onEducationSelect(val){
+          switch (val) {
+            case '初中':
+              this.userInfo.educationId = 0;break;
+            case '高中':
+              this.userInfo.educationId = 1;break;
+            case '大专':
+              this.userInfo.educationId = 2;break;
+            case '本科':
+              this.userInfo.educationId = 3;break;
+            case '硕士':
+              this.userInfo.educationId = 4;break;
+            case '博士':
+              this.userInfo.educationId = 5;break;
+          }
+          this.userInfo.educationName = val;
+          this.educationPicker = false;
         },
         formatSex(val){
           let sex;
@@ -181,9 +214,8 @@
             this.$get('/member/info/'+JSON.parse(user).memberId,{},res => {
 
               this.userInfo = res.data.data;
-              this.userInfo.sex = this.formatSex(res.data.data.sex);
-              this.userInfo.typeId = this.formatIdentity(res.data.data.typeId);
-              this.userInfo.educationId = this.formatEducation(res.data.data.educationId);
+              this.sex = this.formatSex(res.data.data.sex);
+              this.identityType = this.formatIdentity(res.data.data.typeId);
               // this.userInfo.id = userInfo.id;
               // this.userInfo.name = userInfo.name || '';
               // this.userInfo.sex = userInfo.sex || '';
@@ -200,11 +232,6 @@
           }
 
         },
-        onEducationSelect(val){
-          this.userInfo.educationId = val;
-          this.userInfo.education = val;
-          this.educationPicker = false;
-        },
         afterRead(file){
           console.log(file);
           let param = new FormData();
@@ -219,28 +246,27 @@
         },
         submit(){
           let user = localStorage.getItem('runye_user');
-
-          this.userInfo.sex = this.formatSex(this.userInfo.sex);
-          this.userInfo.typeId = this.formatIdentity(this.userInfo.typeId);
-          this.userInfo.educationId = this.formatEducation(this.userInfo.educationId);
           if (user) {
             this.$post('/member/update',this.userInfo,res => {
 
               //报名信息
-              this.getDetail();
-              this.$post('/registration/save',
-                {
-                  courseId:this.$route.query.id,
-                  memberId:JSON.parse(user).memberId,
-                },
-                res => {
-                  if (res) {
-                    this.$toast('报名成功');
-                    this.$router.go(-1);
-                  }
+              if (res) {
+                this.$post('/registration/save',
+                  {
+                    courseId:this.$route.query.id,
+                    memberId:JSON.parse(user).memberId,
+                  },
+                  res => {
+                    if (res) {
+                      this.$toast('报名成功');
+                      this.$router.go(-1);
+                    }
 
-                }
-              )
+                  }
+                )
+              }else {
+                this.$toast('请完善信息');
+              }
             })
           }
         },
@@ -258,5 +284,8 @@
  }
  .van-cell{
    padding: 16px;
+ }
+ .van-cell__value{
+   color:#323233;
  }
 </style>

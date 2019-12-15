@@ -84,6 +84,7 @@
           bottom: 8px;
           color: #ffffff;
           left: 6%;
+          text-align: left;
         }
         /deep/ .van-image{
           width: 92%;

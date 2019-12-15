@@ -161,7 +161,7 @@ const routes = [
     path:'/mine/mileage',
     name:'mileage',
     meta:{
-      title:'我的课程',
+      title:'前进之路',
     },
     component: ()=>import('@/views/mine/mileage.vue')
   }

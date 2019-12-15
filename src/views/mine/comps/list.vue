@@ -92,7 +92,20 @@
         name: "list",
       methods:{
         toPage(path){
-          this.$router.push({path:path});
+          let user = localStorage.getItem('runye_user');
+          if (user) {
+            this.$router.push({path:path});
+          } else{
+            this.$dialog.confirm({
+              title:'温馨提示',
+              message:'您还没有登录，请先前往登录',
+            }).then(() => {
+              this.$router.push({path:'/login'});
+            }).catch(() => {
+              console.log('取消登录');
+            })
+          }
+
         }
       }
     }

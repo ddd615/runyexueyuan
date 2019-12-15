@@ -112,7 +112,11 @@
               {
               },
               res => {
-              this.courseList = res.data.data.list;
+                if (res) {
+                  this.courseList = res.data.data.list;
+                } else {
+                  this.$toast('没有相关的课程');
+                }
               }
             )
         },

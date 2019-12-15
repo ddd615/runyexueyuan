@@ -1,8 +1,9 @@
 <template>
     <div class="nav">
       <div class="avatar">
-        <img :src="userInfo.mainPic" alt="">
-        <p>{{userInfo.nickname}}</p>
+        <img :src="userInfo.mainPic" alt="" v-if="userInfo.mainPic">
+        <img src="../../../assets/images/avatar.png" v-else>
+        <p>{{userInfo.nickname || '昵称'}}</p>
       </div>
     </div>
 </template>

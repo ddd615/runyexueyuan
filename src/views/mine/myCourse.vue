@@ -10,13 +10,13 @@
             @load="onLoad"
           >
             <div class="card" v-for="item in courseList">
-              <div class="card-img">
+              <router-link tag="div" :to="'/course/detail/'+item.id" class="card-img">
                 <img :src="item.mainPic" alt="" width="100%" height="100%">
                 <div class="card-num">
                   <p>{{item.courseName}}</p>
                   <p>编号：{{item.courseId}}</p>
                 </div>
-              </div>
+              </router-link>
               <div class="card-button">
                 <div class="no-sign-in">
                   <van-button @click="changeStatus(1,item)">签到</van-button>
@@ -36,7 +36,7 @@
           finished-text="没有更多了"
           @load="onLoad"
         >
-          <div class="card"  v-for="(item,index) in courseList">
+          <router-link tag="div" :to="'/course/detail/'+item.id" class="card"  v-for="(item,index) in courseList">
             <div class="card-img">
               <img :src="item.mainPic" alt="" width="100%" height="100%">
               <div class="card-num">
@@ -50,7 +50,7 @@
                 <van-button @click="join(0,item,index)">取消参加</van-button>
               </div>
             </div>
-          </div>
+          </router-link>
         </van-list>
       </van-pull-refresh>
     </van-tab>
@@ -62,7 +62,7 @@
           finished-text="没有更多了"
           @load="onLoad"
         >
-          <div class="card" v-for="(item,index) in courseList">
+          <router-link tag="div" :to="'/course/detail/'+item.id" class="card" v-for="(item,index) in courseList">
             <div class="card-img">
               <img :src="item.mainPic" alt="" width="100%" height="100%">
               <div class="card-num">
@@ -75,7 +75,7 @@
                 <van-button size="large" @click="del(item.id,index)">删除课程</van-button>
               </div>
             </div>
-          </div>
+          </router-link>
         </van-list>
       </van-pull-refresh>
     </van-tab>
@@ -87,7 +87,7 @@
           finished-text="没有更多了"
           @load="onLoad"
         >
-      <div class="card" v-for="item in courseList">
+      <router-link tag="div" :to="'/course/detail/'+item.id" class="card" v-for="item in courseList">
         <div class="card-img">
           <img :src="item.mainPic" alt="" width="100%" height="100%">
           <div class="card-num">
@@ -100,7 +100,7 @@
             <van-button size="large" disabled>已结束</van-button>
           </div>
         </div>
-      </div>
+      </router-link>
         </van-list>
       </van-pull-refresh>
     </van-tab>

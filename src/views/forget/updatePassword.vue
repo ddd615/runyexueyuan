@@ -84,16 +84,21 @@
     confirm(){
       if (!this.phone) {
         this.$toast('手机号不能为空');
-        return;
+
+      } else if(!/^1(3|4|5|7|8)\d{9}$/.test(this.phone)){
+        this.$toast('手机号格式不正确！')
       } else if (!this.phoneCode) {
         this.$toast('验证不能为空');
-        return;
-      } else if (!this.password) {
+
+      } else if (!/^(\w){6,20}$/.test(this.password)) {
+        this.$toast('密码只能是6-20个字母、数字、下划线');
+
+      }else if (!this.password) {
         this.$toast('密码不能为空');
-        return;
+
       } else if (this.password !== this.confirmPassword) {
         this.$toast('两次输入密码不一致');
-        return;
+
       } else {
 
         this.$post(
@@ -101,13 +106,16 @@
             {
               mobile:this.phone,
               password:this.password,
-              captcha:this.phoneCode
+              captcha:this.phoneCode,
+              openId:'11321321321312',
             },
             res => {
-              this.$toast('修改成功');
-              setTimeout(()=>{
-                this.$router.replace('/login');
-              },500)
+              if (res) {
+                this.$toast('修改成功');
+                setTimeout(()=>{
+                  this.$router.go(-1);
+                },500)
+              }
             }
           )
         }

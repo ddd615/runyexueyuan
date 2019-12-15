@@ -149,10 +149,15 @@ export default {
     register(){
       if (!this.registerPhone){
         this.$toast('手机号不能为空');
+      }else if(!/^1(3|4|5|7|8)\d{9}$/.test(this.registerPhone)){
+        this.$toast('手机号格式不正确！')
       } else if (!this.registerPassword) {
         this.$toast('密码不能为空');
       } else if (!this.phoneCode) {
         this.$toast('验证码不能为空');
+      } else if (!/^(\w){6,20}$/.test(this.registerPassword)) {
+        this.$toast('密码只能是6-20个字母、数字、下划线');
+
       } else {
         this.$post(
           '/outer/register',
@@ -182,8 +187,13 @@ export default {
     login(){
       if (!this.phone) {
         this.$toast('手机号不能为空');
+      }else if(!/^1(3|4|5|7|8)\d{9}$/.test(this.phone)){
+        this.$toast('手机号格式不正确！')
       } else if (!this.password) {
         this.$toast('密码不能为空');
+      } else if (!/^(\w){6,20}$/.test(this.password)) {
+        this.$toast('密码只能是6-20个字母、数字、下划线');
+
       } else {
         this.$post(
           '/outer/login',
@@ -193,7 +203,7 @@ export default {
             openId:this.openId
           },
           res => {
-            if (res.data.msg === '执行成功') {
+            if (res) {
 
               let user =  res.data.data;
               this.$store.commit('SAVE_ITEM',{

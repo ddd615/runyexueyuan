@@ -86,16 +86,12 @@ service.interceptors.response.use(
       case 9000 :
         Toast('您的登录失效了，请重新登录');
         localStorage.removeItem('runye_user');
-        post('/wechat/redirect',
-          {
-            returnUrl: 'http://rypxhtml.mdsoftware.cn/#/login'
-          },
-          res => {
-            if (res) {
-
-              window.location.href = res.data.data.url;
-            }
-          });
+        router.replace({path:'/login'});
+        break;
+      case 1008 :
+        Toast('您的登录失效了，请重新登录');
+        localStorage.removeItem('runye_user');
+        router.replace({path:'/login'});
         break;
       case 404 :
         break;

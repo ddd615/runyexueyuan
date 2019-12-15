@@ -14,7 +14,6 @@
             label="部门:"
             v-model="userInfo.unit"
             input-align="right"
-
             :disabled="disabled"
           />
           <van-field
@@ -69,21 +68,21 @@
             :disabled="disabled"
           />
           <van-field
-            v-model="userInfo.sex"
+            v-model="sex"
             required
             label="性别："
-            disabled
+            :disabled="disabled"
             is-link
-            @click="sexPicker = true"
+            @click="onSelect('sex')"
 
           />
           <van-field
-            v-model="userInfo.typeId"
+            v-model="identityType"
             required
             label="证件类型："
-            disabled
+            :disabled="disabled"
             is-link
-            @click="identityTypePicker = true"
+            @click="onSelect('identity')"
           />
           <van-field
             v-model="userInfo.identity"
@@ -92,12 +91,12 @@
             :disabled="disabled"
           />
           <van-field
-            v-model="userInfo.educationId"
+            v-model="userInfo.educationName"
             required
             label="学历程度："
             disabled
             is-link
-            @click="educationPicker = true"
+            @click="onSelect('education')"
           />
           <van-field
             v-model="userInfo.major"
@@ -162,7 +161,7 @@
           <van-cell-group>
             <van-cell :title="item.name" v-for="item in certificateList" @click="handleEdit(item)"/>
           </van-cell-group>
-          <div class="no-certificate">
+          <div class="no-certificate" v-if="certificateList.length === 0">
             <img src="../../assets/images/mine_zs.png" alt="">
             <p>没有证书哦</p>
           </div>
@@ -177,7 +176,7 @@
               :disabled="certaficationEdit"
             />
             <van-cell title="证书上传：">
-              <template slot="default">
+              <template>
                 <van-uploader :after-read="certificationUpload" :disabled="certaficationEdit">
                   <img src="../../assets/images/add_photo.png" alt="" v-if="!certification.mainPic" width="86" height="68">
                   <img :src="certification.mainPic" alt="" width="86" height="68" v-else>
@@ -243,6 +242,7 @@
       },
       data(){
           return{
+            sex:'',
             active:0,
             pageNum:1,
             userInfo:{
@@ -330,9 +330,8 @@
             if (user) {
               this.$get('/member/info/'+JSON.parse(user).memberId,{},res => {
                 this.userInfo = res.data.data;
-                this.userInfo.sex = this.formatSex(res.data.data.sex);
-                this.userInfo.typeId = this.formatIdentity(res.data.data.typeId);
-                this.userInfo.educationId = this.formatEducation(res.data.data.educationId);
+                this.sex = this.formatSex(res.data.data.sex);
+                this.identityType = this.formatIdentity(res.data.data.typeId);
                 if (this.userInfo.mainPic){
                   this.hasPic = true;
                 }
@@ -345,13 +344,20 @@
             this.disabled = false;
         },
         save(){
-            this.userInfo.sex = this.formatSex(this.userInfo.sex);
-            this.userInfo.typeId = this.formatIdentity(this.userInfo.typeId);
-            this.userInfo.educationId = this.formatEducation(this.userInfo.educationId);
+            var reg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
+            if (!/^1(3|4|5|7|8)\d{9}$/.test(this.userInfo.mobile)){
+              this.$toast('手机格式不正确');
+              return;
+            }else if (!reg.test(this.userInfo.mailbox)){
+              this.$toast('邮箱格式不正确');
+              return;
+            }
             this.$post('/member/update',this.userInfo,res => {
-              this.$toast('保存成功');
-              this.getDetail();
-              this.disabled = true;
+              if (res) {
+                this.$toast('保存成功');
+                this.getDetail();
+                this.disabled = true;
+              }
             })
         },
         formatSex(val){
@@ -398,24 +404,24 @@
         },
         onSexSelect(val){
 
-            this.userInfo.sex = val;
-          // if (val === '男') {
-          //   this.userInfo.sex = 1;
-          // } else {
-          //   this.userInfo.sex = 2;
-          // }
+          this.sex = val;
+          if (val === '男') {
+            this.userInfo.sex = 1;
+          } else {
+            this.userInfo.sex = 2;
+          }
 
           this.sexPicker = false;
         },
         onTypeSelect(val){
-          this.userInfo.typeId = val;
-          // if (val === '身份证') {
-          //   this.userInfo.typeId = 0;
-          // } else if (val === '港澳通行证'){
-          //   this.userInfo.typeId = 1;
-          // } else if (val === '军官证') {
-          //   this.userInfo.typeId = 2;
-          // }
+          this.identityType = val;
+          if (val === '身份证') {
+            this.userInfo.typeId = 0;
+          } else if (val === '港澳通行证'){
+            this.userInfo.typeId = 1;
+          } else if (val === '军官证') {
+            this.userInfo.typeId = 2;
+          }
           this.identityTypePicker = false;
         },
         onEducationSelect(val){
@@ -433,7 +439,7 @@
             case '博士':
               this.userInfo.educationId = 5;break;
           }
-          this.userInfo.education = val;
+          this.userInfo.educationName = val;
           this.educationPicker = false;
         },
         afterRead(file){
@@ -497,6 +503,8 @@
                       this.$toast('修改成功');
                       this.getCertificate();
                       this.isEdit = false;
+                    }else {
+                      this.$toast('请完善信息');
                     }
                   })
               } else {
@@ -512,6 +520,8 @@
                       this.$toast('保存成功');
                       this.isEdit = false;
                       this.getCertificate();
+                    }else {
+                      this.$toast('请完善信息');
                     }
                   })
               }
@@ -564,6 +574,18 @@
             this.startTime = '开始时间';
             this.endTime = '结束时间';
             this.outDate = '';
+        },
+        onSelect(val){
+           if (!this.disabled) {
+             switch (val) {
+               case 'sex' :
+                 this.sexPicker = true;break;
+               case 'identity' :
+                 this.identityTypePicker = true;break;
+               case  'education' :
+                 this.educationPicker = true;break;
+             }
+           }
         }
       }
     }

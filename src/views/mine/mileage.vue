@@ -291,7 +291,7 @@
         }
         @media screen and (min-width: 321px) {
           padding: 0 10px;
-          width: 130px;
+          width: 138px;
           height: 40px;
           display: flex;
           align-items: center;
