@@ -25,7 +25,8 @@
             userInfo:{},
             pageNum:1,
             pageSize:50,
-            tagList:[]
+            tagList:[],
+            myTags:[],
           }
       },
       created() {
@@ -38,10 +39,14 @@
       },
       methods:{
           getTag(){
-            this.$get(`/studentlabel/list?pageNum=${this.pageNum}&pageSize=${this.pageSize}`,{},res => {
-              this.tagList = res.data.data.list;
-            })
-          }
+            let user = localStorage.getItem('runye_user');
+            if (user) {
+              this.$get(`/member/studentlabelList?pageNum=${this.pageNum}&pageSize=${this.pageSize}&memberId=${JSON.parse(user).memberId}`,{},res => {
+                this.tagList = res.data.data.list;
+              })
+            }
+
+          },
       }
     }
 </script>

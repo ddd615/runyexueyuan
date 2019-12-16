@@ -77,7 +77,7 @@
 
           />
           <van-field
-            v-model="identityType"
+            v-model="userInfo.typeName"
             required
             label="证件类型："
             :disabled="disabled"
@@ -94,7 +94,7 @@
             v-model="userInfo.educationName"
             required
             label="学历程度："
-            disabled
+            :disabled="disabled"
             is-link
             @click="onSelect('education')"
           />
@@ -259,8 +259,10 @@
             sexList: ['男', '女'],
             identityTypePicker: false,
             identityTypeList: ['身份证', '港澳通行证', '军官证'],
+            oldIdentityTypeList:[],
             educationPicker:false,
             educationList:['初中','高中','大专','本科','硕士','博士'],
+            oldEducationList:[],
             hasPic:false,
             identityType:'',
             isEdit:false,
@@ -279,6 +281,7 @@
             indatePicker3:false,
             outDate:'',
             certaficationEdit:true,
+
           }
       },
       filters:{
@@ -306,6 +309,8 @@
       },
       created(){
         this.getCertificate();
+        this.getEducationList();
+        this.getTypeList();
         this.getDetail();
       },
       methods:{
@@ -331,7 +336,7 @@
               this.$get('/member/info/'+JSON.parse(user).memberId,{},res => {
                 this.userInfo = res.data.data;
                 this.sex = this.formatSex(res.data.data.sex);
-                this.identityType = this.formatIdentity(res.data.data.typeId);
+
                 if (this.userInfo.mainPic){
                   this.hasPic = true;
                 }
@@ -339,6 +344,31 @@
               })
             }
 
+        },
+        getEducationList(){
+            this.$get( `/member/educationList`,{},res => {
+              if (res) {
+                let arr = [];
+                res.data.data.list.map((s,i) => {
+                  arr.push(s.name);
+                });
+                this.educationList = arr.reverse();
+                this.oldEducationList = res.data.data.list;
+                console.log(this.oldEducationList);
+              }
+            })
+        },
+        getTypeList(){
+            this.$get(`/member/ocumentTypeList`,{},res => {
+              if (res) {
+                this.oldIdentityTypeList = res.data.data.list;
+                let arr = [];
+                res.data.data.list.map((s,i) => {
+                  arr.push(s.name);
+                });
+                this.identityTypeList = arr.reverse();
+              }
+            })
         },
         edit(){
             this.disabled = false;
@@ -351,6 +381,27 @@
             }else if (!reg.test(this.userInfo.mailbox)){
               this.$toast('邮箱格式不正确');
               return;
+            }
+            if (this.active === 1) {
+              if (!this.userInfo.name) {
+                this.$toast('姓名不能为空');
+                return;
+              } else if (!this.userInfo.sex) {
+                this.$toast('性别不能为空');
+                return;
+              } else if (!this.userInfo.typeId) {
+                this.$toast('证件类型不能为空');
+                return;
+              } else if (!this.userInfo.identity) {
+                this.$toast('证件号码不能为空');
+                return;
+              }else if (!this.userInfo.educationId) {
+                this.$toast('学历程度不能为空');
+                return;
+              }else if (!this.userInfo.mailbox) {
+                this.$toast('邮箱不能为空');
+                return;
+              }
             }
             this.$post('/member/update',this.userInfo,res => {
               if (res) {
@@ -371,6 +422,7 @@
             }
             return sex;
         },
+
         formatIdentity(val){
             switch (val) {
               case '身份证' : val = 0;break;
@@ -414,31 +466,22 @@
           this.sexPicker = false;
         },
         onTypeSelect(val){
-          this.identityType = val;
-          if (val === '身份证') {
-            this.userInfo.typeId = 0;
-          } else if (val === '港澳通行证'){
-            this.userInfo.typeId = 1;
-          } else if (val === '军官证') {
-            this.userInfo.typeId = 2;
-          }
+
+          this.oldIdentityTypeList.map((s,i) => {
+            if (s.name === val) {
+              this.userInfo.typeId = s.id;
+            }
+          });
+          this.userInfo.typeName = val;
           this.identityTypePicker = false;
         },
         onEducationSelect(val){
-          switch (val) {
-            case '初中':
-              this.userInfo.educationId = 0;break;
-            case '高中':
-              this.userInfo.educationId = 1;break;
-            case '大专':
-              this.userInfo.educationId = 2;break;
-            case '本科':
-              this.userInfo.educationId = 3;break;
-            case '硕士':
-              this.userInfo.educationId = 4;break;
-            case '博士':
-              this.userInfo.educationId = 5;break;
-          }
+
+          this.oldEducationList.map((s,i) => {
+            if (s.name === val) {
+              this.userInfo.educationId = s.id;
+            }
+          });
           this.userInfo.educationName = val;
           this.educationPicker = false;
         },
@@ -460,7 +503,7 @@
           param.append('file',file.file);
           this.$post('/file/upload',param,res => {
             console.log(res.data.data);
-            this.certification.mainPic = res.data.data;
+            this.$set(this.certification,'mainPic',res.data.data);
           })
         },
         changeTime(val){

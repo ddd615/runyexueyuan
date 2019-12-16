@@ -38,7 +38,7 @@
           <div class="rich-text" v-html="course.content"></div>
         </van-tab>
       </van-tabs>
-      <van-button type="danger" size="large" :to="{path:'/course/enrollMsg',query:{id:$route.params.id}}">立即报名</van-button>
+      <van-button type="danger" size="large" @click="toPage">立即报名</van-button>
     </div>
 </template>
 
@@ -60,6 +60,20 @@
             this.$get('/course/info/'+this.id,{},res => {
               this.course = res.data.data;
             })
+          },
+          toPage() {
+            let user = localStorage.getItem('runye_user');
+            if (user) {
+              this.$get(`/registration/isSignUp?memberId=${JSON.parse(user).memberId}&courseId=${this.course.id}`,{},res => {
+                if (res) {
+                  this.$router.push({path:'/course/enrollMsg',query:{id:this.$route.params.id}});
+                }else {
+                  this.$toast('您已经报名过了');
+                }
+              })
+            }
+
+
           }
       }
     }

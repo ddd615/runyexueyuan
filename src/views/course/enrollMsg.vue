@@ -18,7 +18,7 @@
 
         <van-cell
           title="证件类型："
-          :value="identityType"
+          :value="userInfo.typeName"
           is-link
           required
           @click="identityTypePicker = true"
@@ -105,13 +105,17 @@
             sexList: ['男', '女'],
             identityTypePicker: false,
             identityTypeList: ['身份证', '港澳通行证', '军官证'],
+            oldEducationList:[],
             educationPicker:false,
             educationList:['初中','高中','大专','本科','硕士','博士'],
+            oldIdentityTypeList:[],
             hasPic:false,
             sex:'',
           }
       },
       created(){
+          this.getEducationList();
+          this.getTypeList();
         this.getDetail();
       },
       filters:{
@@ -128,6 +132,31 @@
         }
       },
       methods:{
+        getEducationList(){
+          this.$get( `/member/educationList`,{},res => {
+            if (res) {
+              let arr = [];
+              res.data.data.list.map((s,i) => {
+                arr.push(s.name);
+              });
+              this.educationList = arr.reverse();
+              this.oldEducationList = res.data.data.list;
+              console.log(this.oldEducationList);
+            }
+          })
+        },
+        getTypeList(){
+          this.$get(`/member/ocumentTypeList`,{},res => {
+            if (res) {
+              this.oldIdentityTypeList = res.data.data.list;
+              let arr = [];
+              res.data.data.list.map((s,i) => {
+                arr.push(s.name);
+              });
+              this.identityTypeList = arr.reverse();
+            }
+          })
+        },
         onSexSelect(val){
           this.sex = val;
           if (val === '男') {
@@ -138,31 +167,22 @@
           this.sexPicker = false;
         },
         onTypeSelect(val){
-          this.identityType = val;
-          if (val === '身份证') {
-            this.userInfo.typeId = 0;
-          } else if (val === '港澳通行证'){
-            this.userInfo.typeId = 1;
-          } else if (val === '军官证') {
-            this.userInfo.typeId = 2;
-          }
+
+          this.oldIdentityTypeList.map((s,i) => {
+            if (s.name === val) {
+              this.userInfo.typeId = s.id;
+            }
+          });
+          this.userInfo.typeName = val;
           this.identityTypePicker = false;
         },
         onEducationSelect(val){
-          switch (val) {
-            case '初中':
-              this.userInfo.educationId = 0;break;
-            case '高中':
-              this.userInfo.educationId = 1;break;
-            case '大专':
-              this.userInfo.educationId = 2;break;
-            case '本科':
-              this.userInfo.educationId = 3;break;
-            case '硕士':
-              this.userInfo.educationId = 4;break;
-            case '博士':
-              this.userInfo.educationId = 5;break;
-          }
+
+          this.oldEducationList.map((s,i) => {
+            if (s.name === val) {
+              this.userInfo.educationId = s.id;
+            }
+          });
           this.userInfo.educationName = val;
           this.educationPicker = false;
         },
@@ -215,7 +235,6 @@
 
               this.userInfo = res.data.data;
               this.sex = this.formatSex(res.data.data.sex);
-              this.identityType = this.formatIdentity(res.data.data.typeId);
               // this.userInfo.id = userInfo.id;
               // this.userInfo.name = userInfo.name || '';
               // this.userInfo.sex = userInfo.sex || '';
@@ -245,8 +264,35 @@
           // this.userInfo.mainPic = file.content;
         },
         submit(){
+          var reg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
+          if (!/^1(3|4|5|7|8)\d{9}$/.test(this.userInfo.mobile)){
+            this.$toast('手机格式不正确');
+            return;
+          }else if (!reg.test(this.userInfo.mailbox)){
+            this.$toast('邮箱格式不正确');
+            return;
+          }
           let user = localStorage.getItem('runye_user');
           if (user) {
+            if (!this.userInfo.name) {
+              this.$toast('姓名不能为空');
+              return;
+            } else if (!this.userInfo.sex) {
+              this.$toast('性别不能为空');
+              return;
+            } else if (!this.userInfo.typeId) {
+              this.$toast('证件类型不能为空');
+              return;
+            } else if (!this.userInfo.identity) {
+              this.$toast('证件号码不能为空');
+              return;
+            }else if (!this.userInfo.educationId) {
+              this.$toast('学历程度不能为空');
+              return;
+            }else if (!this.userInfo.mailbox) {
+              this.$toast('邮箱不能为空');
+              return;
+            }
             this.$post('/member/update',this.userInfo,res => {
 
               //报名信息
