@@ -108,12 +108,13 @@
 </template>
 
 <script>
+
     export default {
         name: "myCourse",
       data(){
           return{
             active:0,
-            pageNum:2,
+            pageNum:1,
             pageSize:10,
             courseList:[],
             lat:0,
@@ -124,36 +125,38 @@
           }
       },
       created(){
-        this.getMyCourse();
+        // this.getMyCourse();
       },
       mounted(){
         let that = this;
-        let mapObj = new AMap.Map('iCenter');
-        mapObj.plugin('AMap.Geolocation',() =>  {
-          let geolocation = new AMap.Geolocation({
-            enableHighAccuracy: true,//是否使用高精度定位，默认:true
-            timeout: 10000,          //超过10秒后停止定位，默认：无穷大
-            maximumAge: 0,           //定位结果缓存0毫秒，默认：0
-            convert: true,           //自动偏移坐标，偏移后的坐标为高德坐标，默认：true
-            showButton: true,        //显示定位按钮，默认：true
-            buttonPosition: 'LB',    //定位按钮停靠位置，默认：'LB'，左下角
-            buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
-            showMarker: true,        //定位成功后在定位到的位置显示点标记，默认：true
-            showCircle: true,        //定位成功后用圆圈表示定位精度范围，默认：true
-            panToLocation: true,     //定位成功后将定位到的位置作为地图中心点，默认：true
-            zoomToAccuracy:true      //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
-          });
-          mapObj.addControl(geolocation);
-          geolocation.getCurrentPosition();
-          AMap.event.addListener(geolocation, 'complete', res => {
-            console.log(res);
-            that.lat = res.position.lat;
-            that.lng = res.position.lng;
-          });//返回定位信息
-          AMap.event.addListener(geolocation, 'error', err => {
-            console.log(err);
-          });      //返回定位出错信息
-        });
+        // let mapObj = new AMap.Map('iCenter');
+        this.getWxConfig();
+        // mapObj.plugin('AMap.Geolocation',() =>  {
+        //   let geolocation = new AMap.Geolocation({
+        //     enableHighAccuracy: true,//是否使用高精度定位，默认:true
+        //     timeout: 10000,          //超过10秒后停止定位，默认：无穷大
+        //     maximumAge: 0,           //定位结果缓存0毫秒，默认：0
+        //     convert: true,           //自动偏移坐标，偏移后的坐标为高德坐标，默认：true
+        //     showButton: true,        //显示定位按钮，默认：true
+        //     buttonPosition: 'LB',    //定位按钮停靠位置，默认：'LB'，左下角
+        //     buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+        //     showMarker: true,        //定位成功后在定位到的位置显示点标记，默认：true
+        //     showCircle: true,        //定位成功后用圆圈表示定位精度范围，默认：true
+        //     panToLocation: true,     //定位成功后将定位到的位置作为地图中心点，默认：true
+        //     zoomToAccuracy:true      //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+        //   });
+
+        //   mapObj.addControl(geolocation);
+        //   geolocation.getCurrentPosition();
+        //   AMap.event.addListener(geolocation, 'complete', res => {
+        //     console.log(res);
+        //     that.lat = res.position.lat;
+        //     that.lng = res.position.lng;
+        //   });//返回定位信息
+        //   AMap.event.addListener(geolocation, 'error', err => {
+        //     console.log(err);
+        //   });      //返回定位出错信息
+        // });
       },
       methods:{
           getMyCourse(){
@@ -175,7 +178,7 @@
                   if(res) {
                     this.pageNum++;
                     this.courseList = this.courseList.concat(res.data.data.list);
-                    if (res.data.data.nextPage === 0) {
+                    if (!res.data.data.hasNextPage) {
                       this.finished = true
                     }
                     this.isLoading = false;
@@ -191,7 +194,8 @@
           },
         onClick(){
             this.courseList = [];
-            this.getMyCourse();
+            this.pageNum = 1;
+            this.finished = false;
         },
         del(id,index) {
             this.$get(`/registration/delete/${id}`,{},res => {
@@ -229,11 +233,12 @@
         },
         onRefresh(){
             this.courseList = [];
+            this.pageNum = 1;
             this.finished = false;
-            this.getMyCourse();
+
         },
         onLoad(){
-            // this.getMyCourse();
+            this.getMyCourse();
         },
         onChange(){
             this.courseList = [];
@@ -255,6 +260,35 @@
                 this.courseList.splice(index,1);
               }
               })
+        },
+        getWxConfig(){
+            let that = this;
+            this.$post('/wechat/jsapi',{url:window.location.href.split('#')[0]},res => {
+              if (res) {
+                wx.config({
+                  debug: true,
+                  appId: res.data.data.appId, // 必填，公众号的唯一标识
+                  timestamp: res.data.data.timestamp, // 必填，生成签名的时间戳
+                  nonceStr: res.data.data.nonce, // 必填，生成签名的随机串
+                  signature: res.data.data.signature,// 必填，签名
+                  jsApiList: ['getLocation'] // 必填，需要使用的JS接口列表
+                });
+                wx.ready(() => {
+                  wx.getLocation({
+                    type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+                    success: function (res) {
+                      console.log(res);
+                      var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+                      var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+                      var speed = res.speed; // 速度，以米/每秒计
+                      var accuracy = res.accuracy; // 位置精度
+                           that.lat = res.latitude;;
+                           that.lng = res.longitude;
+                    }
+                  });
+                });
+              }
+            })
         }
       }
     }
