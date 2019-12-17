@@ -12,7 +12,7 @@ export default {
   components:{
     myLoading
   },
-  
+
   computed:{
     loading(){
       return this.$store.state.loading
@@ -63,5 +63,8 @@ export default {
   }
   input{
     border: none;
+  }
+  .van-field__label{
+    width: 98px;
   }
 </style>

@@ -7,13 +7,13 @@
           label="姓名："
           placeholder="请输入姓名"
           input-align="right"
+          disabled
         />
         <van-cell
           title="性别："
           :value="sex"
           is-link
           required
-          @click="sexPicker = true"
         />
 
         <van-cell
@@ -21,35 +21,37 @@
           :value="userInfo.typeName"
           is-link
           required
-          @click="identityTypePicker = true"
+
         />
         <van-field
           v-model="userInfo.identity"
           required
           label="证件号码："
           input-align="right"
+          disabled
         />
         <van-cell
           title="学历程度："
           :value="userInfo.educationName"
           is-link
           required
-          @click="educationPicker = true"
         />
         <van-field
           v-model="userInfo.major"
           label="专业："
           input-align="right"
+          disabled
         />
         <van-field
           v-model="userInfo.mailbox"
           required
           label="个人电子邮箱："
           input-align="right"
+          disabled
         />
         <van-cell title="电子照片（白底彩照）：">
           <template>
-            <van-uploader :after-read="afterRead">
+            <van-uploader :after-read="afterRead" disabled>
               <img src="../../assets/images/add_photo.png" alt="" v-if="!userInfo.mainPic">
               <img :src="userInfo.mainPic" alt="" v-else width="86" height="78">
             </van-uploader>
@@ -59,6 +61,7 @@
           v-model="userInfo.otherInfo "
           rows="4"
           autosize
+          disabled
           label="其他资料："
           type="textarea"
         />
@@ -293,27 +296,28 @@
               this.$toast('邮箱不能为空');
               return;
             }
-            this.$post('/member/update',this.userInfo,res => {
+            // this.$post('/member/update',this.userInfo,res => {
+            //
+            //   //报名信息
+            //   if (res) {
+            //
+            //   }else {
+            //     this.$toast('请完善信息');
+            //   }
+            // })
+            this.$post('/registration/save',
+              {
+                courseId:this.$route.query.id,
+                memberId:JSON.parse(user).memberId,
+              },
+              res => {
+                if (res) {
+                  this.$toast('报名成功');
+                  this.$router.go(-1);
+                }
 
-              //报名信息
-              if (res) {
-                this.$post('/registration/save',
-                  {
-                    courseId:this.$route.query.id,
-                    memberId:JSON.parse(user).memberId,
-                  },
-                  res => {
-                    if (res) {
-                      this.$toast('报名成功');
-                      this.$router.go(-1);
-                    }
-
-                  }
-                )
-              }else {
-                this.$toast('请完善信息');
               }
-            })
+            )
           }
         },
 
@@ -331,7 +335,7 @@
  .van-cell{
    padding: 16px;
  }
- .van-cell__value{
-   color:#323233;
- }
+ /*.van-cell__value{*/
+ /*  color:#323233;*/
+ /*}*/
 </style>

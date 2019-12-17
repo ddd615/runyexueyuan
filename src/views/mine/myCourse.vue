@@ -10,7 +10,7 @@
             @load="onLoad"
           >
             <div class="card" v-for="item in courseList">
-              <router-link tag="div" :to="'/course/detail/'+item.id" class="card-img">
+              <router-link tag="div" :to="{path:'/course/detail/',query:{id:item.courseId,type:'mine'}}" class="card-img">
                 <img :src="item.mainPic" alt="" width="100%" height="100%">
                 <div class="card-num">
                   <p>{{item.courseName}}</p>
@@ -36,7 +36,7 @@
           finished-text="没有更多了"
           @load="onLoad"
         >
-          <router-link tag="div" :to="'/course/detail/'+item.id" class="card"  v-for="(item,index) in courseList">
+          <router-link tag="div" :to="{path:'/course/detail/',query:{id:item.courseId,type:'mine'}}" class="card"  v-for="(item,index) in courseList">
             <div class="card-img">
               <img :src="item.mainPic" alt="" width="100%" height="100%">
               <div class="card-num">
@@ -62,7 +62,7 @@
           finished-text="没有更多了"
           @load="onLoad"
         >
-          <router-link tag="div" :to="'/course/detail/'+item.id" class="card" v-for="(item,index) in courseList">
+          <router-link tag="div" :to="{path:'/course/detail/',query:{id:item.courseId,type:'mine'}}" class="card" v-for="(item,index) in courseList">
             <div class="card-img">
               <img :src="item.mainPic" alt="" width="100%" height="100%">
               <div class="card-num">
@@ -87,7 +87,7 @@
           finished-text="没有更多了"
           @load="onLoad"
         >
-      <router-link tag="div" :to="'/course/detail/'+item.id" class="card" v-for="item in courseList">
+      <router-link tag="div" :to="{path:'/course/detail/',query:{id:item.courseId,type:'mine'}}" class="card" v-for="item in courseList">
         <div class="card-img">
           <img :src="item.mainPic" alt="" width="100%" height="100%">
           <div class="card-num">
@@ -143,6 +143,18 @@
             panToLocation: true,     //定位成功后将定位到的位置作为地图中心点，默认：true
             zoomToAccuracy:true      //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
           });
+          // if (AMap.UA.ios) {
+          //   //使用远程定位，见 remogeo.js
+          //   var remoGeo = new RemoGeoLocation();
+          //   //替换方法
+          //   navigator.geolocation.getCurrentPosition = function() {
+          //     return remoGeo.getCurrentPosition.apply(remoGeo, arguments);
+          //   };
+          //   //替换方法
+          //   navigator.geolocation.watchPosition = function() {
+          //     return remoGeo.watchPosition.apply(remoGeo, arguments);
+          //   };
+          // }
           mapObj.addControl(geolocation);
           geolocation.getCurrentPosition();
           AMap.event.addListener(geolocation, 'complete', res => {

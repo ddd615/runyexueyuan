@@ -38,7 +38,7 @@
           <div class="rich-text" v-html="course.content"></div>
         </van-tab>
       </van-tabs>
-      <van-button type="danger" size="large" @click="toPage">立即报名</van-button>
+      <van-button type="danger" size="large" @click="toPage" v-if="!type">立即报名</van-button>
     </div>
 </template>
 
@@ -48,8 +48,9 @@
       data(){
           return{
             active:0,
-            id:this.$route.params.id,
-            course:{}
+            id:this.$route.query.id,
+            course:{},
+            type:this.$route.query.type
           }
       },
       created() {

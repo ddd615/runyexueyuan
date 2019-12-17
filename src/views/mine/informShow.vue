@@ -31,7 +31,7 @@
 
 <style scoped>
   .rich-text{
-    width: 100%;
+    padding: 10px;
   }
 .rich-text/deep/ img{
   max-width: 100%;

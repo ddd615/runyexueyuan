@@ -2,7 +2,7 @@
     <div class="achievement">
       <van-cell-group>
         <van-field v-model="name" label="姓名" :disabled="disabled" placeholder="请输入姓名" />
-        <van-field v-model="identity" label="证件号" :disabled="disabled" placeholder="请输入姓名" />
+        <van-field v-model="identity" label="证件号" :disabled="disabled" placeholder="请输入证件号" />
       </van-cell-group>
       <van-button type="primary" size="large" v-if="!isCheck" @click="find">查询</van-button>
       <div v-if="isCheck">

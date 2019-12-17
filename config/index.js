@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        target: 'http://211.149.159.33:8091',
+        target: 'https://rypxapi.mdsoftware.cn',
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''

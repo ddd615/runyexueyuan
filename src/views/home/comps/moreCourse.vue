@@ -13,13 +13,14 @@
       finished-text="没有更多了"
       @load="onLoad"
     >
-    <router-link  tag="div" :to="'/course/detail/'+item.id" class="course-list" v-for="item in courseList">
-      <img :src="item.mainPic" alt="">
-      <div class="course-msg">
-        <p>{{item.name}}</p>
-        <p>编号：{{item.id}}</p>
-      </div>
-    </router-link>
+      <router-link tag="div" :to="{path:'/course/detail/',query:{id:item.id}}" class="course-list"
+                   v-for="item in courseList">
+        <img :src="item.mainPic" alt="">
+        <div class="course-msg">
+          <p>{{item.name}}</p>
+          <p>编号：{{item.id}}</p>
+        </div>
+      </router-link>
     </van-list>
   </div>
 </template>
@@ -27,35 +28,38 @@
 <script>
   export default {
     name: "moreCourse",
-    data(){
-      return{
-        courseList:[],
-        pageSize:10,
-        pageNum:1,
-        loading:false,
-        finished:false,
+    data() {
+      return {
+        courseList: [],
+        pageSize: 10,
+        pageNum: 0,
+        loading: false,
+        finished: false,
       }
     },
     created() {
 
     },
-    methods:{
-      getCourse(){
+    methods: {
+      getCourse() {
         this.$get(`/course/list?pageNum=${this.pageNum}&pageSize=${this.pageSize}`,
-          {
-
-          },
+          {},
           res => {
-          this.pageNum++;
-          this.courseList = this.courseList.concat(res.data.data.gengduo);
-          this.loading = false;
-          if (res.data.data.gengduo.length <10) {
-            this.finished = true;
-          }
+           if (res) {
+             this.pageNum += 10;
+             this.courseList = this.courseList.concat(res.data.data.gengduo);
+             this.loading = false;
+             if (res.data.data.gengduo.length < 10) {
+               this.finished = true;
+             }
+           }else {
+             this.finished = true;
+             this.loading = false;
+           }
           }
         )
       },
-      onLoad(){
+      onLoad() {
         this.getCourse();
       }
     }
@@ -63,63 +67,72 @@
 </script>
 
 <style lang="less" scoped>
-  .moreCourse{
-    .tab{
+  .moreCourse {
+    .tab {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 10px 15px;
-      .tab_left{
+
+      .tab_left {
         display: flex;
         align-items: center;
-        img{
+
+        img {
           width: 8px;
           height: 15px;
         }
-        span{
+
+        span {
           display: inline-block;
           margin-left: 5px;
         }
       }
-      >img{
+
+      > img {
         width: 7px;
         height: 11px;
       }
     }
+
     /*@media screen and (min-width: 330px) {*/
-    .course-list{
+
+    .course-list {
       text-align: center;
       position: relative;
       margin-top: 6px;
-      .course-msg{
+
+      .course-msg {
         position: absolute;
         font-size: 7px;
         bottom: 8px;
         color: #ffffff;
         left: 6%;
       }
+
       @media screen and (min-width: 330px) and (max-width: 413px) {
-        img{
+        img {
           width: 92%;
           height: 155px;
           border-radius: 12px;
         }
       }
       @media screen and (max-width: 320px) {
-        img{
+        img {
           width: 92%;
           height: 132px;
           border-radius: 8px;
         }
       }
       @media screen and (min-width: 414px) {
-        img{
+        img {
           width: 92%;
           height: 171px;
           border-radius: 14px;
         }
       }
     }
+
     /*}*/
     /*@media screen and (max-width: 320px) {*/
     /*  .course-list{*/

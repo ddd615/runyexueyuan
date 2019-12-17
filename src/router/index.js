@@ -78,7 +78,7 @@ const routes = [
     component: ()=>import('@/views/home/comps/moreCourse.vue')
   },
   {
-    path:'/course/detail/:id',
+    path:'/course/detail',
     name:'detail',
     meta:{
       title:'课程详情',

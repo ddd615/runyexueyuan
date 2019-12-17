@@ -121,7 +121,7 @@
             )
         },
         toDetail(item){
-            this.$router.push({path:'/course/detail/'+item.id})
+            this.$router.push({path:'/course/detail',query:{id:item.id}})
         },
       }
     }

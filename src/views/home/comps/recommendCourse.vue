@@ -1,116 +1,140 @@
 <template>
-    <div class="recommendCourse">
-      <div class="tab">
-        <div class="tab_left">
-          <img src="../../../assets/images/tab_front.png" alt="">
-          <span>推荐课程</span>
-        </div>
-        <img src="../../../assets/images/arrow_right.png" alt="" @click="toMore">
+  <div class="recommendCourse">
+    <div class="tab">
+      <div class="tab_left">
+        <img src="../../../assets/images/tab_front.png" alt="">
+        <span>推荐课程</span>
       </div>
-      <router-link tag="div" :to="'/course/detail/'+item.id" class="course-list" v-for="item in courseList">
+      <img src="../../../assets/images/arrow_right.png" alt="" @click="toMore">
+    </div>
+    <van-list
+      v-model="loading"
+      :finished="finished"
+      finished-text="没有更多了"
+      @load="onLoad"
+    >
+      <router-link tag="div" :to="{path:'/course/detail/',query:{id:item.id}}" class="course-list" v-for="item in courseList">
         <van-image :src="item.mainPic" fit="cover" alt=""/>
         <div class="course-msg">
           <p>{{item.name}}</p>
           <p>编号：{{item.id}}</p>
         </div>
       </router-link>
-    </div>
+    </van-list>
+  </div>
 </template>
 
 <script>
-    export default {
-        name: "recommendCourse",
-      data(){
-          return{
-            courseList:[]
-          }
-      },
-      created(){
-        this.getCourse();
-      },
-      methods:{
-          getCourse(){
-            this.$get(
-              '/course/list',
-              {
-                pageNum:1,
-                pageSize:10
-              },
-              res => {
-                if (res.data.msg === '执行成功') {
-                  this.courseList = res.data.data.tuijian
-                }
-              }
-            )
+  export default {
+    name: "recommendCourse",
+    data() {
+      return {
+        courseList: [],
+        loading: false,
+        finished: false,
+        pageNum:0
+      }
+    },
+    created() {
+
+    },
+    methods: {
+      getCourse() {
+        this.$get(
+          `/course/list?pageNum=${this.pageNum}&pageSize=10`,
+          {
           },
-        toMore(){
-            this.$router.push({path:'/moreCourse'});
-        }
+          res => {
+            if (res) {
+              this.pageNum+=10;
+              this.courseList = this.courseList.concat(res.data.data.tuijian);
+              if (res.data.data.tuijian.length < 10) {
+                this.finished = true;
+              }
+              this.loading = false;
+            }
+          }
+        )
+      },
+      toMore() {
+        this.$router.push({path: '/moreCourse'});
+      },
+      onLoad() {
+        this.getCourse();
       }
     }
+  }
 </script>
 
 <style lang="less" scoped>
-  .recommendCourse{
-    .tab{
+  .recommendCourse {
+    .tab {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 10px 15px;
-      .tab_left{
+
+      .tab_left {
         display: flex;
         align-items: center;
-        img{
+
+        img {
           width: 8px;
           height: 15px;
         }
-        span{
+
+        span {
           display: inline-block;
           margin-left: 5px;
         }
       }
-      >img{
+
+      > img {
         width: 7px;
         height: 11px;
       }
     }
+
     /*@media screen and (min-width: 330px) {*/
-      .course-list{
-        text-align: center;
-        position: relative;
-        .course-msg{
-          position: absolute;
-          font-size: 7px;
-          bottom: 8px;
-          color: #ffffff;
-          left: 6%;
-          text-align: left;
+
+    .course-list {
+      text-align: center;
+      position: relative;
+      margin-top: 5px;
+      .course-msg {
+        position: absolute;
+        font-size: 7px;
+        bottom: 8px;
+        color: #ffffff;
+        left: 6%;
+        text-align: left;
+      }
+
+      /deep/ .van-image {
+        width: 92%;
+        @media screen and (min-width: 330px) and (max-width: 413px) {
+          img {
+
+            height: 155px;
+            border-radius: 12px;
+          }
         }
-        /deep/ .van-image{
-          width: 92%;
-          @media screen and (min-width: 330px) and (max-width: 413px) {
-            img{
+        @media screen and (max-width: 320px) {
+          img {
 
-              height: 155px;
-              border-radius: 12px;
-            }
+            height: 132px;
+            border-radius: 8px;
           }
-          @media screen and (max-width: 320px) {
-            img{
+        }
+        @media screen and (min-width: 414px) {
+          img {
 
-              height: 132px;
-              border-radius: 8px;
-            }
-          }
-          @media screen and (min-width: 414px) {
-            img{
-
-              height: 171px;
-              border-radius: 14px;
-            }
+            height: 171px;
+            border-radius: 14px;
           }
         }
       }
+    }
 
     /*}*/
     /*@media screen and (max-width: 320px) {*/

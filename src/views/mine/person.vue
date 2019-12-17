@@ -66,20 +66,21 @@
             label="姓名："
             placeholder="请输入姓名"
             :disabled="disabled"
+            input-align="right"
           />
-          <van-field
-            v-model="sex"
+          <van-cell
+            :value="sex"
             required
-            label="性别："
+            title="性别："
             :disabled="disabled"
             is-link
             @click="onSelect('sex')"
 
           />
-          <van-field
-            v-model="userInfo.typeName"
+          <van-cell
+            :value="userInfo.typeName"
             required
-            label="证件类型："
+            title="证件类型："
             :disabled="disabled"
             is-link
             @click="onSelect('identity')"
@@ -87,13 +88,15 @@
           <van-field
             v-model="userInfo.identity"
             required
+            type="number"
             label="证件号码："
             :disabled="disabled"
+            input-align="right"
           />
-          <van-field
-            v-model="userInfo.educationName"
+          <van-cell
+            :value="userInfo.educationName"
             required
-            label="学历程度："
+            title="学历程度："
             :disabled="disabled"
             is-link
             @click="onSelect('education')"
@@ -102,12 +105,14 @@
             v-model="userInfo.major"
             label="专业："
             :disabled="disabled"
+            input-align="right"
           />
           <van-field
             v-model="userInfo.mailbox"
             required
             label="个人电子邮箱："
             :disabled="disabled"
+            input-align="right"
           />
           <van-cell title="电子照片（白底彩照）：">
             <template>
@@ -669,7 +674,7 @@
     }
   }
   .certificate{
-
+    padding-bottom: 20px;
     .no-certificate{
       text-align: center;
       padding-top: 100px;
