@@ -49,10 +49,11 @@
             label="工作地址:"
             input-align="right"
             v-model="userInfo.address"
-
+            @focus="isShowBottom = false"
+            @blur="isShowBottom = true"
             :disabled="disabled"
           />
-          <div class="bottom-button">
+          <div class="bottom-button"  v-if="isShowBottom">
             <van-button type="primary"  @click="save">保存</van-button>
             <van-button type="info"  @click="edit">修改</van-button>
           </div>
@@ -110,6 +111,7 @@
           <van-field
             v-model="userInfo.mailbox"
             required
+            label-width="100px"
             label="个人电子邮箱："
             :disabled="disabled"
             input-align="right"
@@ -286,7 +288,7 @@
             indatePicker3:false,
             outDate:'',
             certaficationEdit:true,
-
+            isShowBottom:true
           }
       },
       filters:{

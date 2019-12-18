@@ -3,7 +3,7 @@
       <div class="avatar">
         <img :src="userInfo.mainPic" alt="" v-if="userInfo.mainPic">
         <img src="../../../assets/images/avatar.png" v-else>
-        <p>{{userInfo.nickname || '昵称'}}</p>
+        <p>{{userInfo.name || '昵称'}}</p>
       </div>
     </div>
 </template>
@@ -19,7 +19,11 @@
       created() {
           let user = localStorage.getItem('runye_user');
           if (user) {
-            this.userInfo = JSON.parse(user);
+            this.$get(`member/info/${JSON.parse(user).memberId}`,{},res => {
+              if (res) {
+                this.userInfo = res.data.data;
+              }
+            })
           }
 
 

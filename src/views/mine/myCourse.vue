@@ -19,8 +19,8 @@
               </router-link>
               <div class="card-button">
                 <div class="no-sign-in">
-                  <van-button @click="changeStatus(1,item)">签到</van-button>
-                  <van-button @click="changeStatus(0,item)">请假</van-button>
+                  <van-button @click.stop="changeStatus(1,item)">签到</van-button>
+                  <van-button @click.stop="changeStatus(0,item)">请假</van-button>
                 </div>
               </div>
             </div>
@@ -47,8 +47,8 @@
             </div>
             <div class="card-button">
               <div class="no-sign-in">
-                <van-button @click="join(1,item,index)">确定参加</van-button>
-                <van-button @click="join(0,item,index)">取消参加</van-button>
+                <van-button @click.stop="join(1,item,index)">确定参加</van-button>
+                <van-button @click.stop="join(0,item,index)">取消参加</van-button>
               </div>
             </div>
           </router-link>
@@ -75,7 +75,7 @@
             </div>
             <div class="card-button">
               <div class="sign-in">
-                <van-button size="large" @click="del(item.id,index)">删除课程</van-button>
+                <van-button size="large" @click.stop="del(item.id,index)">删除课程</van-button>
               </div>
             </div>
           </router-link>
@@ -102,7 +102,7 @@
         </div>
         <div class="card-button">
           <div class="sign-in">
-            <van-button size="large" disabled>已结束</van-button>
+            <van-button size="large" disabled >已结束</van-button>
           </div>
         </div>
       </router-link>
@@ -119,7 +119,7 @@
       data(){
           return{
             active:0,
-            pageNum:2,
+            pageNum:1,
             pageSize:10,
             courseList:[],
             lat:0,
@@ -172,6 +172,8 @@
           },
         onClick(){
             this.courseList = [];
+            this.pageNum = 1;
+            this.finished = false;
             this.getMyCourse();
         },
         del(id,index) {
@@ -242,7 +244,7 @@
           this.$post('/wechat/jsapi',{url:window.location.href.split('#')[0]},res => {
             if (res) {
               wx.config({
-                debug: true,
+                debug: false,
                 appId: res.data.data.appId, // 必填，公众号的唯一标识
                 timestamp: res.data.data.timestamp, // 必填，生成签名的时间戳
                 nonceStr: res.data.data.nonce, // 必填，生成签名的随机串

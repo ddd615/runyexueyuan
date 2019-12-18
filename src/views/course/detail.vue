@@ -72,6 +72,15 @@
                   this.$toast('您已经报名过了');
                 }
               })
+            }else {
+              this.$dialog.confirm({
+                title:'温馨提示',
+                message:'您还没有登录，请先前往登录',
+              }).then(() => {
+                this.$router.push({path:'/login'});
+              }).catch(() => {
+                console.log('取消登录');
+              })
             }
 
 

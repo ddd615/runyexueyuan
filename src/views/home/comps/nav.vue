@@ -10,7 +10,7 @@
     </div>
     <div class="nav_right" @click="toPage('/mine/inform')">
       <img src="../../../assets/images/通知@3x.png" alt="">
-      <div class="red-point" v-if="isHasNoRead"></div>
+      <div class="red-point" v-if="$store.state.isHasNoRead"></div>
     </div>
   </div>
 </template>
@@ -32,9 +32,13 @@
             if (user) {
               this.$get(`/notice/isReadList?isRead=0&memberId=${JSON.parse(user).memberId}`,{},res => {
                 if (res) {
-                  this.isHasNoRead = true;
+                  this.$store.commit('SAVE_ITEM',{
+                    isHasNoRead:true
+                  })
                 } else {
-                  this.isHasNoRead = false;
+                  this.$store.commit('SAVE_ITEM',{
+                    isHasNoRead:false
+                  })
                 }
               })
             }else {

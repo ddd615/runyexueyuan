@@ -9,6 +9,7 @@ const initPageState = () => {
 
     },
     loading:false,
+    isHasNoRead:false,
   };
 };
 

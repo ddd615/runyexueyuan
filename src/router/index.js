@@ -15,7 +15,8 @@ const routes = [
     name: 'login',
     meta:{
       title:'首页',
-      isAuthority:true
+      isAuthority:true,
+
     },
     component: ()=>import('@/views/Login.vue')
   },
@@ -41,7 +42,8 @@ const routes = [
     path:'/home',
     name:'home',
     meta:{
-      title:'首页'
+      title:'首页',
+      isKeepAlive:true,
     },
     component: ()=>import('@/views/home/index.vue')
   },
@@ -175,7 +177,7 @@ const router = new Router({
 // 路由前置导航守卫
 router.beforeEach((to,from,next)=>{
   // 根据路由元信息设置文档标题
-  window.scrollTo(0,0);
+  // window.scrollTo(0,0);
 
   window.document.title = to.meta.title || "闰业";
   let user = localStorage.getItem('runye_user')

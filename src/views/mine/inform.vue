@@ -85,7 +85,8 @@
               this.$toast('已确定');
               this.informList[index].isConfirm = 1;
             }
-          })
+          });
+
         } else {
 
         }

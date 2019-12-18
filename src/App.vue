@@ -1,6 +1,9 @@
 <template>
   <div id="app">
-    <router-view/>
+    <keep-alive>
+      <router-view v-if="$route.meta.isKeepAlive"/>
+    </keep-alive>
+    <router-view  v-if="!$route.meta.isKeepAlive"/>
     <my-loading v-if="loading" />
   </div>
 </template>
@@ -64,7 +67,7 @@ export default {
   input{
     border: none;
   }
-  .van-field__label{
-    width: 98px;
-  }
+  /*.van-field__label{*/
+  /*  width: 106px;*/
+  /*}*/
 </style>

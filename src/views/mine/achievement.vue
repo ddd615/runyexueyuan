@@ -1,8 +1,8 @@
 <template>
     <div class="achievement">
       <van-cell-group>
-        <van-field v-model="name" label="姓名" :disabled="disabled" placeholder="请输入姓名" />
-        <van-field v-model="identity" label="证件号" :disabled="disabled" placeholder="请输入证件号" />
+        <van-field v-model="userInfo.name" label="姓名" :disabled="disabled" placeholder="请输入姓名" />
+        <van-field v-model="userInfo.identity" label="证件号" :disabled="disabled" placeholder="请输入证件号" />
       </van-cell-group>
       <van-button type="primary" size="large" v-if="!isCheck" @click="find">查询</van-button>
       <div v-if="isCheck">
@@ -43,13 +43,17 @@
             gradeList:[],
             name:'',
             identity:'',
-            disabled:false
+            disabled:true,
+            userInfo:{}
           }
+      },
+      created(){
+        this.getUserInfo();
       },
       methods:{
         find(){
 
-          this.$get(`/grade/list?memberName=${this.name}&identity=${this.identity}&pageNum=1&pageSize=10`,{},res => {
+          this.$get(`/grade/list?memberName=${this.userInfo.name}&identity=${this.userInfo.identity}&pageNum=1&pageSize=10`,{},res => {
             if (res) {
               this.isCheck = true;
               this.disabled = true;
@@ -75,7 +79,7 @@
                       obj.subjectList.push({
                         subject:item.subject,
                         score:item.score
-                      })
+                      });
                       res.data.data.list[index].courseId = ''
                     }
 
@@ -85,9 +89,21 @@
                 }
               });
               this.gradeList = arr;
+            }else {
+              this.$toast('暂无成绩');
             }
           })
 
+        },
+        getUserInfo(){
+          let user = localStorage.getItem('runye_user');
+          if (user) {
+            this.$get(`/member/info/${JSON.parse(user).memberId}`,{},res => {
+              if (res) {
+                this.userInfo = res.data.data;
+              }
+            })
+          }
         }
       }
     }

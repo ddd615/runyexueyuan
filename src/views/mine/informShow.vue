@@ -12,6 +12,7 @@
       },
       created() {
           this.getDetail();
+
       },
       methods:{
           getDetail(){
@@ -20,8 +21,20 @@
               this.$get(`/notice/info/${this.$route.query.id}/${JSON.parse(user).memberId}`,{},res => {
                 if (res) {
                   this.desc = res.data.data.content;
+                  this.$get(`/notice/isReadList?isRead=0&memberId=${JSON.parse(user).memberId}`,{},res => {
+                    if (res) {
+                      this.$store.commit('SAVE_ITEM',{
+                        isHasNoRead:true
+                      })
+                    } else {
+                      this.$store.commit('SAVE_ITEM',{
+                        isHasNoRead:false
+                      })
+                    }
+                  })
                 }
               })
+
             }
 
           }
