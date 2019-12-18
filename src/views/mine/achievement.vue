@@ -23,7 +23,7 @@
           <van-col span="4" tag="ul">
             <li v-for="s in item.subjectList">{{s.score}}</li>
           </van-col>
-          <van-col span="4">{{item.isQualified === 0 ? '通过':'不通过'}}</van-col>
+          <van-col span="4">{{item.isQualified === 0 ? '不通过':'通过'}}</van-col>
         </van-row>
         <van-row style="height: 10px;background: #F2F2F2"></van-row>
         <van-row class="explain">

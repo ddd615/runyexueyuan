@@ -67,7 +67,7 @@
             if (user) {
               this.$get(`/registration/isSignUp?memberId=${JSON.parse(user).memberId}&courseId=${this.course.id}`,{},res => {
                 if (res) {
-                  this.$router.push({path:'/course/enrollMsg',query:{id:this.$route.params.id}});
+                  this.$router.push({path:'/course/enrollMsg',query:{id:this.$route.query.id}});
                 }else {
                   this.$toast('您已经报名过了');
                 }

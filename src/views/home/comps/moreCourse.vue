@@ -3,7 +3,7 @@
     <div class="tab">
       <div class="tab_left">
         <img src="../../../assets/images/tab_front.png" alt="">
-        <span>更多课程</span>
+        <span>近期面授课程</span>
       </div>
       <img src="../../../assets/images/arrow_right.png" alt="" style="object-fit: cover">
     </div>
