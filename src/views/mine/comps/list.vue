@@ -50,7 +50,7 @@
       </van-cell>
       <van-cell>
         <template slot="title">
-          <img src="../../../assets/images/wdtz.png" alt="">
+          <img src="../../../assets/images/wdhz.png" alt="">
           <span>我的徽章</span>
         </template>
         <template>
