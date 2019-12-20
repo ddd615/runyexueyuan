@@ -42,7 +42,7 @@
     }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
   .rich-text{
     padding: 10px;
   }

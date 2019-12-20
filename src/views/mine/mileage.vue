@@ -183,82 +183,91 @@
           getMileage(){
             let user = localStorage.getItem('runye_user');
             if (user) {
-              this.$get(`/timeAxis/list?memberId=${JSON.parse(user).memberId}&pageNum=1&pageSize=100`,{},res => {
-                if (res) {
-                  let obj = {
-                    participateCourseTime:res.data.data.list[0].firstLoginTime,
-                    courseName:'账号注册成功，开始修炼',
-                    type:3
-                  }
-
-                  let list = res.data.data.list;
-                  list.push(obj);
-
-                  let arr = [];
-                  let arr1 = [];
-                  let num = 7;
-                  let num1 = 3;
-                  arr.push([]);
-                  list.reverse().map((s,i) => {
-                    if (i<num) {
-                      arr[num/7-1].push(s);
-                    } else {
-                      num+=7;
-                      arr.push([]);
-                      arr[num/7-1].push(s);
-                    }
-                  });
-                  console.log(arr);
-                  arr.map((s,i) => {
-                    if (i === 0) {
-                      let list = [];
-                      s.map((item,index) =>{
-                        s[index].background = this.firstMileage[index].arrow;
-                        s[index].left = this.firstMileage[index].left;
-                      });
-                      arr1.push({
-                        background:this.firstBg,
-                        list:s
-                      })
-                    } else if (i === 1) {
-                      s.map((item,index) =>{
-                        s[index].background = this.secondMileage[index].arrow;
-                        s[index].left = this.secondMileage[index].left;
-                      });
-                      arr1.push({
-                        background:this.secondBg,
-                        list:s
-                      })
-                    } else if (i >= 2) {
-                      if (i%2 === 0) {
-                        s.map((item,index) =>{
-                          s[index].background = this.thirdMileage[index].arrow;
-                          s[index].left = this.thirdMileage[index].left;
-                        });
-                        arr1.push({
-                          background:this.thirdBg,
-                          list:s
-                        })
-                      } else {
-                        s.map((item,index) =>{
-                          s[index].background = this.fourthMileage[index].arrow;
-                          s[index].left = this.fourthMileage[index].left;
-                        });
-                        arr1.push({
-                          background:this.fourthBg,
-                          list:s
-                        })
+              this.$get('/member/info/' + JSON.parse(user).memberId, {}, res => {
+                if (res.data.data.nickname) {
+                  this.$get(`/timeAxis/list?memberId=${JSON.parse(user).memberId}&pageNum=1&pageSize=100`,{},res => {
+                    if (res) {
+                      let obj = {
+                        participateCourseTime:res.data.data.list[0].firstLoginTime,
+                        courseName:'账号注册成功，开始修炼',
+                        type:3
                       }
-                    }
-                  });
-                  // arr1.map((s,i) => {
-                  //   arr1[i].list = s.list.reverse();
-                  // });
-                  console.log(arr1);
 
-                  this.mileageList = arr1.reverse();
+                      let list = res.data.data.list;
+                      list.push(obj);
+
+                      let arr = [];
+                      let arr1 = [];
+                      let num = 7;
+                      let num1 = 3;
+                      arr.push([]);
+                      list.reverse().map((s,i) => {
+                        if (i<num) {
+                          arr[num/7-1].push(s);
+                        } else {
+                          num+=7;
+                          arr.push([]);
+                          arr[num/7-1].push(s);
+                        }
+                      });
+                      console.log(arr);
+                      arr.map((s,i) => {
+                        if (i === 0) {
+                          let list = [];
+                          s.map((item,index) =>{
+                            s[index].background = this.firstMileage[index].arrow;
+                            s[index].left = this.firstMileage[index].left;
+                          });
+                          arr1.push({
+                            background:this.firstBg,
+                            list:s
+                          })
+                        } else if (i === 1) {
+                          s.map((item,index) =>{
+                            s[index].background = this.secondMileage[index].arrow;
+                            s[index].left = this.secondMileage[index].left;
+                          });
+                          arr1.push({
+                            background:this.secondBg,
+                            list:s
+                          })
+                        } else if (i >= 2) {
+                          if (i%2 === 0) {
+                            s.map((item,index) =>{
+                              s[index].background = this.thirdMileage[index].arrow;
+                              s[index].left = this.thirdMileage[index].left;
+                            });
+                            arr1.push({
+                              background:this.thirdBg,
+                              list:s
+                            })
+                          } else {
+                            s.map((item,index) =>{
+                              s[index].background = this.fourthMileage[index].arrow;
+                              s[index].left = this.fourthMileage[index].left;
+                            });
+                            arr1.push({
+                              background:this.fourthBg,
+                              list:s
+                            })
+                          }
+                        }
+                      });
+                      // arr1.map((s,i) => {
+                      //   arr1[i].list = s.list.reverse();
+                      // });
+                      console.log(arr1);
+
+                      this.mileageList = arr1.reverse();
+                    }
+                  })
+
+                } else {
+                  this.$toast('请先完善资料');
                 }
-              })
+
+
+              });
             }
 
           }

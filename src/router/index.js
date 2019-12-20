@@ -68,6 +68,7 @@ const routes = [
     name:'course',
     meta:{
       title:'课程分类',
+      isKeepAlive:true,
     },
     component: ()=>import('@/views/course/index.vue')
   },
@@ -76,6 +77,7 @@ const routes = [
     name:'moreCourse',
     meta:{
       title:'更多课程',
+      isKeepAlive: true,
     },
     component: ()=>import('@/views/home/comps/moreCourse.vue')
   },

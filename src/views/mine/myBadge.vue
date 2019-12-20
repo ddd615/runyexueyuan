@@ -3,8 +3,9 @@
       <div style="position: relative">
         <img src="../../assets/images/mine_badge_nav.png" alt="" width="100%">
         <div class="nav-text">
-          <img :src="userInfo.mainPic" alt="头像" width="50" height="50">
-          <span>{{userInfo.nickname}}的荣誉墙（{{tagList.length || 0}}个）</span>
+          <img :src="userInfo.mainPic" alt="头像" width="50" height="50" v-if="userInfo.mainPic">
+          <img src="../../assets/images/avatar.png" v-else>
+          <span>{{userInfo.nickname||'昵称'}}的荣誉墙（{{tagList.length || 0}}个）</span>
         </div>
       </div>
       <div style="display: flex;flex-wrap: wrap;width: 92%;margin: 0 auto;">

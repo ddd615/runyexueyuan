@@ -40,7 +40,7 @@
     name: "updatePassword",
   data(){
       return{
-        phone:'',
+        phone:this.$route.query.phone,
         phoneCode:'',
         password:'',
         confirmPassword:'',

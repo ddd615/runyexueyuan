@@ -22,8 +22,8 @@
               </van-sidebar>
             </div>
           </van-col>
-          <van-col span="19" style="height: 90vh;overflow: auto;padding-bottom: 50px;">
-            <div class="layout-right">
+          <van-col span="19" style="height: 90vh;overflow: auto;padding-bottom: 50px;" id="course">
+            <div class="layout-right" >
               <div class="card" v-for="item in courseList" @click="toDetail(item)">
                 <img :src="item.mainPic" alt="" width="100%" height="100%" style="object-fit: cover">
                 <div class="card-num">
@@ -121,6 +121,8 @@
             )
         },
         toDetail(item){
+            // const scroll = document.getElementById('course').scrollTop;
+            // console.log(scroll);
             this.$router.push({path:'/course/detail',query:{id:item.id}})
         },
       }

@@ -49,7 +49,7 @@
             label="工作地址:"
             input-align="right"
             v-model="userInfo.address"
-            @focus="isShowBottom = false"
+            @focus="onFocus"
             @blur="isShowBottom = true"
             :disabled="disabled"
           />
@@ -111,7 +111,7 @@
           <van-field
             v-model="userInfo.mailbox"
             required
-            label-width="100px"
+            label-width="120px"
             label="个人电子邮箱："
             :disabled="disabled"
             input-align="right"
@@ -308,12 +308,17 @@
       },
       formatterTime(val) {
         if (typeof (val) === "string") {
-          return val;
+          if (val.indexOf('00:00') >= 0) {
+            return val.split(' ')[0];
+          } else {
+            return val;
+          }
+
         } else if (typeof (val) === "object") {
           let y = val.getFullYear();
           let m = val.getMonth() + 1;
           let d = val.getDate();
-          return y + '-' + m + '-' + d + ' 00:00:00';
+          return y + '-' + m + '-' + d ;
         }
       }
     },
@@ -384,11 +389,18 @@
       },
       save() {
         const reg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
+        const regEn = /[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im,
+          regCn = /[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im;
+
+
         if (!/^1(3|4|5|7|8)\d{9}$/.test(this.userInfo.mobile)) {
           this.$toast('手机格式不正确');
           return;
         } else if (!reg.test(this.userInfo.mailbox)) {
           this.$toast('邮箱格式不正确');
+          return;
+        } else  if(regEn.test(this.userInfo.identity) || regCn.test(this.userInfo.identity)) {
+          this.$toast("身份证不能包含特殊字符");
           return;
         }
         let num = 0;
@@ -743,6 +755,11 @@
             }
           }
         }
+      },
+      onFocus(){
+        setTimeout(function () {
+          document.body.scrollTop = document.body.scrollHeight;
+        }, 500);
       }
 
     }

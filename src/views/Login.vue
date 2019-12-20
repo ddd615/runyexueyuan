@@ -206,12 +206,16 @@ export default {
             if (res) {
 
               let user =  res.data.data;
-              this.$store.commit('SAVE_ITEM',{
-                user:user
-              });
-              localStorage.setItem('runye_user',JSON.stringify(user));
-              this.$toast('登录成功');
-              this.$router.push('/home');
+              if (user.isInside === '1') {
+                this.$router.push({path:'/updatePassword',query:{phone:user.mobile}});
+              } else {
+                this.$toast('登录成功');
+                this.$router.push('/home');
+                this.$store.commit('SAVE_ITEM',{
+                  user:user
+                });
+                localStorage.setItem('runye_user',JSON.stringify(user));
+              }
             }
           }
         )

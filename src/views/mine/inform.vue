@@ -146,7 +146,8 @@
         line-height: 20px;
         /*max-height: 120px;*/
         text-overflow: ellipsis;
-
+        max-height:20vh;
+        overflow: hidden;
         /deep/ img {
           max-width: 100%;
         }
