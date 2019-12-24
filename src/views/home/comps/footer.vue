@@ -1,6 +1,6 @@
 <template>
     <div class="footer">
-      <div class="home">
+      <div class="home" @click="reLoad">
         <img src="../../../assets/images/tabbar_home.png" alt="">
         <p>首页</p>
       </div>
@@ -17,7 +17,12 @@
 
 <script>
     export default {
-        name: "footer"
+        name: "footer",
+      methods:{
+        reLoad(){
+          this.$root.$emit('on-refresh');
+        }
+      }
     }
 </script>
 

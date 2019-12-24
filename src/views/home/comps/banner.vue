@@ -18,7 +18,10 @@
       },
       created() {
           this.getBanner();
-          console.log(localStorage.getItem('runye_user'))
+
+        this.$root.$on('on-refresh',() => {
+          this.getBanner();
+        })
       },
       methods:{
           getBanner(){

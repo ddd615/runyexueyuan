@@ -36,7 +36,11 @@
       }
     },
     created() {
-
+      this.$root.$on('on-refresh',() => {
+        this.pageNum = 0;
+        this.courseList = [];
+        this.finished = false;
+      })
     },
     methods: {
       getCourse() {

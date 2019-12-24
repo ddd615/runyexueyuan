@@ -327,6 +327,24 @@
       this.getEducationList();
       this.getTypeList();
       this.getDetail();
+      //安卓软键盘弹起
+      let that = this
+      let oriWinHeight = window.innerHeight
+      window.onresize = function() {
+
+        let newHeight = window.innerHeight
+
+        // 阀值大于140判断为键盘收起
+        if (newHeight - oriWinHeight > 140) {
+          console.log('收起');
+          that.isShowBottom = true
+
+        }else {
+          console.log('弹出');
+          that.isShowBottom = false
+        }
+        oriWinHeight = newHeight
+      }
     },
     methods: {
       getCertificate() {
@@ -684,8 +702,8 @@
             this.certification.mainPic = info.mainPic;
             this.certification.id = info.id;
             this.outDate = info.expireTime;
-            this.startTime = info.term.split(',')[0];
-            this.endTime = info.term.split(',')[0];
+            this.startTime = info.term.split(',')[0] || '';
+            this.endTime = info.term.split(',')[0] || '';
             this.isEdit = true;
           }
         })

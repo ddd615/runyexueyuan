@@ -30,10 +30,10 @@
         placeholder="请输入电话"
         required
       />
-      <van-field
-        v-model="typeId"
+      <van-cell
+        :value="typeName"
         required
-        label="证件类型："
+        title="证件类型："
         is-link
         input-align="right"
         @click="identityTypePicker = true"
@@ -87,8 +87,10 @@
             mainPic:'',
             identity:'',
             typeId:'',
+            typeName:'',
             identityTypePicker:false,
-            identityTypeList: ['身份证', '港澳通行证', '军官证'],
+            identityTypeList: [],
+            oldIdentityTypeList:[],
           }
       },
       computed:{
@@ -100,13 +102,41 @@
         if (user) {
           this.mobile = JSON.parse(user).mobile;
           this.accessToken = JSON.parse(user).accessToken;
+          this.getTypeList();
         }
 
       },
       methods:{
+        getTypeList() {
+          this.$get(`/member/ocumentTypeList`, {}, res => {
+            if (res) {
+              this.oldIdentityTypeList = res.data.data.list;
+              let arr = [];
+              res.data.data.list.map((s, i) => {
+                arr.push(s.name);
+              });
+              this.identityTypeList = arr.reverse();
+            }
+          })
+        },
         save(){
           let user = localStorage.getItem('runye_user');
           if (user) {
+            const reg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
+            const regEn = /[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im,
+              regCn = /[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im;
+
+
+            if (!/^1(3|4|5|7|8)\d{9}$/.test(this.mobile)) {
+              this.$toast('手机格式不正确');
+              return;
+            } else if (!reg.test(this.mailbox)) {
+              this.$toast('邮箱格式不正确');
+              return;
+            } else  if(regEn.test(this.identity) || regCn.test(this.identity)) {
+              this.$toast("身份证不能包含特殊字符");
+              return;
+            }
             if (!this.company) {
               this.$toast('公司名称不能为空');
             }else if (!this.unit){
@@ -123,15 +153,11 @@
               this.$toast('证件号不能为空');
             }else if (!this.mainPic) {
               this.$toast('电子图像不能为空');
-            }else {
-                let val = this.typeId;
-                if (val === '身份证') {
-                  this.typeId = 0;
-                } else if (val === '港澳通行证'){
-                  this.typeId = 1;
-                } else if (val === '军官证') {
-                  this.typeId = 2;
-                }
+            }else if (this.isEmojiCharacter(this.name)){
+              this.$toast('姓名不能包含表情');
+
+            } else {
+
                 this.$post(
                   '/member/update',
                   {
@@ -143,6 +169,7 @@
                     id:JSON.parse(user).memberId,
                     mainPic: this.mainPic,
                     typeId: this.typeId,
+                    typeName:this.typeName,
                     identity: this.identity,
                   },
                   res => {
@@ -175,15 +202,46 @@
           // this.userInfo.mainPic = file.content;
         },
         onTypeSelect(val){
-          this.typeId = val;
-          // if (val === '身份证') {
-          //   this.userInfo.typeId = 0;
-          // } else if (val === '港澳通行证'){
-          //   this.userInfo.typeId = 1;
-          // } else if (val === '军官证') {
-          //   this.userInfo.typeId = 2;
-          // }
+          this.oldIdentityTypeList.map((s, i) => {
+            if (s.name === val) {
+              this.typeId = s.id;
+            }
+          });
+          this.typeName = val;
           this.identityTypePicker = false;
+        },
+        isEmojiCharacter(substring) {
+          for (var i = 0; i < substring.length; i++) {
+            var hs = substring.charCodeAt(i);
+            if (0xd800 <= hs && hs <= 0xdbff) {
+              if (substring.length > 1) {
+                var ls = substring.charCodeAt(i + 1);
+                var uc = ((hs - 0xd800) * 0x400) + (ls - 0xdc00) + 0x10000;
+                if (0x1d000 <= uc && uc <= 0x1f77f) {
+                  return true;
+                }
+              }
+            } else if (substring.length > 1) {
+              var ls = substring.charCodeAt(i + 1);
+              if (ls == 0x20e3) {
+                return true;
+              }
+            } else {
+              if (0x2100 <= hs && hs <= 0x27ff) {
+                return true;
+              } else if (0x2B05 <= hs && hs <= 0x2b07) {
+                return true;
+              } else if (0x2934 <= hs && hs <= 0x2935) {
+                return true;
+              } else if (0x3297 <= hs && hs <= 0x3299) {
+                return true;
+              } else if (hs == 0xa9 || hs == 0xae || hs == 0x303d || hs == 0x3030
+                || hs == 0x2b55 || hs == 0x2b1c || hs == 0x2b1b
+                || hs == 0x2b50) {
+                return true;
+              }
+            }
+          }
         },
       }
     }

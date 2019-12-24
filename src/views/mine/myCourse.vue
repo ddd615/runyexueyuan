@@ -127,6 +127,7 @@
             isLoading:false,
             loading:false,
             finished:false,
+            address:''
           }
       },
       created(){
@@ -194,6 +195,7 @@
                   courseId:item.courseId,
                   lat:this.lat,
                   lon:this.lng,
+                  address:this.address,
                   memberId: JSON.parse(user).memberId,
                   type:status
                 },res => {
@@ -253,19 +255,40 @@
               });
               wx.ready(() => {
                 wx.getLocation({
-                  type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+                  type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
                   success: function (res) {
                     console.log(res);
                     var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
                     var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
                     var speed = res.speed; // 速度，以米/每秒计
                     var accuracy = res.accuracy; // 位置精度
-                    that.lat = res.latitude;;
+                    that.lat = res.latitude;
                     that.lng = res.longitude;
+                    that.getLoaction(that.lat,that.lng)
                   }
                 });
               });
             }
+          })
+        },
+        getLoaction(lat,lon){
+          let that = this;
+          AMap.plugin('AMap.Geocoder', function() {
+            let geocoder = new AMap.Geocoder({
+              // city 指定进行编码查询的城市，支持传入城市名、adcode 和 citycode
+              city:'全国',
+              radius: 10
+            })
+
+            let lnglat = [lon, lat]
+            console.log(lnglat);
+            geocoder.getAddress(lnglat, function(status, result) {
+              if (status === 'complete' && result.info === 'OK') {
+                // result为对应的地理位置详细信息
+                console.log(result.regeocode);
+                that.address = result.regeocode.formattedAddress
+              }
+            })
           })
         }
       }

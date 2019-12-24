@@ -25,6 +25,9 @@
       },
       created() {
           this.getStatus();
+        this.$root.$on('on-refresh',() => {
+          this.getStatus();
+        })
       },
       methods:{
           getStatus(){

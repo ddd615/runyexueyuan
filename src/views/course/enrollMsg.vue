@@ -45,6 +45,7 @@
         <van-field
           v-model="userInfo.mailbox"
           required
+          label-width="120px"
           label="个人电子邮箱："
           input-align="right"
           disabled

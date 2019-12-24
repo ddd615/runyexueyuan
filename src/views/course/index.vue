@@ -1,6 +1,6 @@
 <template>
     <div>
-      <form action="/">
+      <form action="/" class="search">
         <van-search
           placeholder="搜索课程关键字"
           v-model="keyword"
@@ -13,7 +13,7 @@
           </div>
         </van-search>
       </form>
-      <div style="position: relative">
+      <div style="position: relative;margin-top: 56px;">
         <van-row>
           <van-col span="5">
             <div class="layout-left">
@@ -22,7 +22,7 @@
               </van-sidebar>
             </div>
           </van-col>
-          <van-col span="19" style="height: 90vh;overflow: auto;padding-bottom: 50px;" id="course">
+          <van-col span="19" style="overflow: auto;padding-bottom: 50px;" id="course">
             <div class="layout-right" >
               <div class="card" v-for="item in courseList" @click="toDetail(item)">
                 <img :src="item.mainPic" alt="" width="100%" height="100%" style="object-fit: cover">
@@ -134,6 +134,12 @@
     border: 1px solid #999999;
     background: #f2f2f2;
   }
+  .search{
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 2;
+  }
   @media screen and (max-width: 320px){
     .search-icon{
       position: absolute;
@@ -159,6 +165,8 @@
     display: inline-block;
     height: 90vh;
     background: #ffffff;
+    position: fixed;
+    left: 0;
     .van-sidebar-item{
       background-color:#ffffff ;
       font-size: 12px;

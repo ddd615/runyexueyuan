@@ -183,8 +183,7 @@
           getMileage(){
             let user = localStorage.getItem('runye_user');
             if (user) {
-              this.$get('/member/info/' + JSON.parse(user).memberId, {}, res => {
-                if (res.data.data.nickname) {
+
                   this.$get(`/timeAxis/list?memberId=${JSON.parse(user).memberId}&pageNum=1&pageSize=100`,{},res => {
                     if (res) {
                       let obj = {
@@ -262,12 +261,8 @@
                     }
                   })
 
-                } else {
-                  this.$toast('请先完善资料');
-                }
 
 
-              });
             }
 
           }
