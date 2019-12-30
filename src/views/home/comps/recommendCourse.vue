@@ -5,7 +5,10 @@
         <img src="../../../assets/images/tab_front.png" alt="">
         <span>推荐课程</span>
       </div>
-      <img src="../../../assets/images/arrow_right.png" alt="" @click="toMore">
+      <div class="tab_right"  @click="toMore">
+        <span>more</span>
+        <img src="../../../assets/images/arrow_right.png" alt="">
+      </div>
     </div>
     <van-list
       v-model="loading"
@@ -92,11 +95,17 @@
           margin-left: 5px;
         }
       }
-
-      > img {
-        width: 7px;
-        height: 11px;
+      .tab_right{
+        > img {
+          width: 7px;
+          height: 11px;
+        }
+        span{
+          font-size: 14px;
+          color: #999999;
+        }
       }
+
     }
 
     /*@media screen and (min-width: 330px) {*/
@@ -107,7 +116,7 @@
       margin-top: 5px;
       .course-msg {
         position: absolute;
-        font-size: 7px;
+        font-size: 11px;
         bottom: 8px;
         color: #ffffff;
         left: 6%;

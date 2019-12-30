@@ -104,7 +104,7 @@
 
       .course-msg {
         position: absolute;
-        font-size: 7px;
+        font-size: 11px;
         bottom: 8px;
         color: #ffffff;
         left: 6%;
@@ -115,6 +115,7 @@
           width: 92%;
           height: 155px;
           border-radius: 12px;
+          object-fit: cover;
         }
       }
       @media screen and (max-width: 320px) {
@@ -122,6 +123,7 @@
           width: 92%;
           height: 132px;
           border-radius: 8px;
+          object-fit: cover;
         }
       }
       @media screen and (min-width: 414px) {
@@ -129,6 +131,7 @@
           width: 92%;
           height: 171px;
           border-radius: 14px;
+          object-fit: cover;
         }
       }
     }

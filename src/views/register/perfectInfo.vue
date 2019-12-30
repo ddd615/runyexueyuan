@@ -151,8 +151,6 @@
               this.$toast('证件类别不能为空');
             }else if (!this.identity) {
               this.$toast('证件号不能为空');
-            }else if (!this.mainPic) {
-              this.$toast('电子图像不能为空');
             }else if (this.isEmojiCharacter(this.name)){
               this.$toast('姓名不能包含表情');
 
