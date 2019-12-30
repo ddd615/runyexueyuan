@@ -172,7 +172,7 @@
     >div{
       &:first-child{
         position: relative;
-        top: 80px;
+        /*top: 80px;*/
         left: 10px;
         font-size: 14px;
       }

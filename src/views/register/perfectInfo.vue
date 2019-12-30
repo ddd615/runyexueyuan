@@ -256,4 +256,7 @@
   .van-cell{
     padding: 16px;
   }
+  .perfectInfo{
+    padding-bottom: 50px;
+  }
 </style>

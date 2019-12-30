@@ -54,8 +54,12 @@
           res => {
             if (res) {
               this.pageNum+=10;
-              this.courseList = this.courseList.concat(res.data.data.tuijian);
-              if (res.data.data.tuijian.length < 10) {
+              if (res.data.data.tuijian) {
+                this.courseList = this.courseList.concat(res.data.data.tuijian);
+                if (res.data.data.tuijian.length < 10) {
+                  this.finished = true;
+                }
+              }else {
                 this.finished = true;
               }
               this.loading = false;

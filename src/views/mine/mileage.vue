@@ -258,6 +258,9 @@
                       console.log(arr1);
 
                       this.mileageList = arr1.reverse();
+                    }else {
+                      this.getDetail();
+
                     }
                   })
 
@@ -265,7 +268,38 @@
 
             }
 
+          },
+        getDetail(){
+          let user = localStorage.getItem('runye_user');
+          if (user) {
+            this.$get('/member/info/'+JSON.parse(user).memberId,{},res => {
+              if (res) {
+                let obj = {
+                  participateCourseTime:res.data.data.createTime,
+                  courseName:'账号注册成功，开始修炼',
+                  type:3,
+                };
+                let mileage = [
+                  {
+                    background:this.firstBg,
+                    list:[
+                      {
+                        background:this.firstMileage[0].arrow,
+                        participateCourseTime:res.data.data.createTime,
+                        courseName:'账号注册成功，开始修炼',
+                        type:3,
+                        left:this.firstMileage[0].left
+                      }
+                      ],
+                  }
+                  ];
+                this.mileageList = mileage;
+                console.log(this.mileageList);
+              }
+            })
           }
+
+        },
       }
     }
 </script>
