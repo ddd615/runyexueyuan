@@ -1,14 +1,12 @@
 <template>
     <div>
-      <van-cell-group>
-        <van-field
-          v-model="userInfo.name"
+      <van-cell-group @click="toPage">
+        <van-cell
+          title="姓名:"
+          :value="userInfo.name"
           required
-          label="姓名："
-          placeholder="请输入姓名"
-          input-align="right"
-          disabled
         />
+
         <van-cell
           title="性别："
           :value="sex"
@@ -23,12 +21,10 @@
           required
 
         />
-        <van-field
-          v-model="userInfo.identity"
+        <van-cell
+          title="证件号码:"
+          :value="userInfo.identity"
           required
-          label="证件号码："
-          input-align="right"
-          disabled
         />
         <van-cell
           title="学历程度："
@@ -36,19 +32,16 @@
           is-link
           required
         />
-        <van-field
-          v-model="userInfo.major"
-          label="专业："
-          input-align="right"
-          disabled
+        <van-cell
+          title="专业:"
+          :value="userInfo.major"
+          required
         />
-        <van-field
-          v-model="userInfo.mailbox"
+        <van-cell
+          title="个人电子邮箱:"
+          :value="userInfo.mailbox"
           required
           label-width="120px"
-          label="个人电子邮箱："
-          input-align="right"
-          disabled
         />
         <van-cell title="电子照片（白底彩照）：">
           <template>
@@ -321,7 +314,9 @@
             )
           }
         },
-
+        toPage(){
+          this.$router.push({path:'/mine/person',query:{type:1}});
+        }
       }
     }
 </script>

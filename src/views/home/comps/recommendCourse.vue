@@ -10,12 +10,12 @@
         <img src="../../../assets/images/arrow_right.png" alt="">
       </div>
     </div>
-    <van-list
-      v-model="loading"
-      :finished="finished"
-      finished-text="没有更多了"
-      @load="onLoad"
-    >
+<!--    <van-list-->
+<!--      v-model="loading"-->
+<!--      :finished="finished"-->
+<!--      finished-text="没有更多了"-->
+<!--      @load="onLoad"-->
+<!--    >-->
       <router-link tag="div" :to="{path:'/course/detail/',query:{id:item.id}}" class="course-list" v-for="item in courseList">
         <van-image :src="item.mainPic" fit="cover" alt=""/>
         <div class="course-msg">
@@ -23,7 +23,30 @@
           <p>编号：{{item.id}}</p>
         </div>
       </router-link>
-    </van-list>
+    <div class="tab">
+      <div class="tab_left">
+        <img src="../../../assets/images/tab_front.png" alt="">
+        <span>近期面授课程</span>
+      </div>
+      <div class="tab_right"  @click="toMore">
+        <span>more</span>
+        <img src="../../../assets/images/arrow_right.png" alt="">
+      </div>
+    </div>
+    <!--    <van-list-->
+    <!--      v-model="loading"-->
+    <!--      :finished="finished"-->
+    <!--      finished-text="没有更多了"-->
+    <!--      @load="onLoad"-->
+    <!--    >-->
+    <router-link tag="div" :to="{path:'/course/detail/',query:{id:item.id}}" class="course-list" v-for="item in courseList">
+      <van-image :src="item.mainPic" fit="cover" alt=""/>
+      <div class="course-msg">
+        <p>{{item.name}}</p>
+        <p>编号：{{item.id}}</p>
+      </div>
+    </router-link>
+<!--    </van-list>-->
   </div>
 </template>
 
@@ -39,30 +62,30 @@
       }
     },
     created() {
+      this.getCourse();
       this.$root.$on('on-refresh',() => {
-        this.pageNum = 0;
-        this.courseList = [];
-        this.finished = false;
+        this.getCourse();
       })
     },
     methods: {
       getCourse() {
         this.$get(
-          `/course/list?pageNum=${this.pageNum}&pageSize=10`,
+          `/course/list?pageNum=${this.pageNum}&pageSize=5`,
           {
           },
           res => {
             if (res) {
-              this.pageNum+=10;
-              if (res.data.data.tuijian) {
-                this.courseList = this.courseList.concat(res.data.data.tuijian);
-                if (res.data.data.tuijian.length < 10) {
-                  this.finished = true;
-                }
-              }else {
-                this.finished = true;
-              }
-              this.loading = false;
+              // this.pageNum+=10;
+              // if (res.data.data.tuijian) {
+              //   this.courseList = this.courseList.concat(res.data.data.tuijian);
+              //   if (res.data.data.tuijian.length < 10) {
+              //     this.finished = true;
+              //   }
+              // }else {
+              //   this.finished = true;
+              // }
+              // this.loading = false;
+              this.courseList = res.data.data.tuijian;
             }
           }
         )
@@ -70,9 +93,6 @@
       toMore() {
         this.$router.push({path: '/moreCourse'});
       },
-      onLoad() {
-        this.getCourse();
-      }
     }
   }
 </script>

@@ -253,7 +253,7 @@
     data() {
       return {
         sex: '',
-        active: 0,
+        active: this.$route.query.type || 0,
         pageNum: 1,
         userInfo: {
           company: '',
@@ -466,6 +466,9 @@
             this.$toast('保存成功');
             this.getDetail();
             this.disabled = true;
+            if (this.$route.query.type) {
+              this.$router.go(-1);
+            }
           }
         })
       },
