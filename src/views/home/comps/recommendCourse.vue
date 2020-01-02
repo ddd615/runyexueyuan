@@ -5,7 +5,7 @@
         <img src="../../../assets/images/tab_front.png" alt="">
         <span>推荐课程</span>
       </div>
-      <div class="tab_right"  @click="toMore">
+      <div class="tab_right"  @click="toMore('推荐课程')">
         <span>more</span>
         <img src="../../../assets/images/arrow_right.png" alt="">
       </div>
@@ -28,7 +28,7 @@
         <img src="../../../assets/images/tab_front.png" alt="">
         <span>近期面授课程</span>
       </div>
-      <div class="tab_right"  @click="toMore">
+      <div class="tab_right"  @click="toMore('近期面授课程')">
         <span>more</span>
         <img src="../../../assets/images/arrow_right.png" alt="">
       </div>
@@ -39,7 +39,7 @@
     <!--      finished-text="没有更多了"-->
     <!--      @load="onLoad"-->
     <!--    >-->
-    <router-link tag="div" :to="{path:'/course/detail/',query:{id:item.id}}" class="course-list" v-for="item in courseList">
+    <router-link tag="div" :to="{path:'/course/detail/',query:{id:item.id}}" class="course-list" v-for="item in recentCourseList">
       <van-image :src="item.mainPic" fit="cover" alt=""/>
       <div class="course-msg">
         <p>{{item.name}}</p>
@@ -58,7 +58,8 @@
         courseList: [],
         loading: false,
         finished: false,
-        pageNum:0
+        pageNum:0,
+        recentCourseList:[]
       }
     },
     created() {
@@ -86,12 +87,13 @@
               // }
               // this.loading = false;
               this.courseList = res.data.data.tuijian;
+              this.recentCourseList = res.data.data.gengduo;
             }
           }
         )
       },
-      toMore() {
-        this.$router.push({path: '/moreCourse'});
+      toMore(type) {
+        this.$router.push({path: '/moreCourse',query:{type:type}});
       },
     }
   }

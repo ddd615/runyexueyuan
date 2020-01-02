@@ -3,7 +3,7 @@
     <div class="tab">
       <div class="tab_left">
         <img src="../../../assets/images/tab_front.png" alt="">
-        <span>近期面授课程</span>
+        <span>{{$route.query.type}}</span>
       </div>
       <img src="../../../assets/images/arrow_right.png" alt="" style="object-fit: cover">
     </div>
@@ -35,23 +35,39 @@
         pageNum: 0,
         loading: false,
         finished: false,
+        type:this.$route.query.type
       }
     },
     created() {
 
     },
+    watch:{
+      type(val) {
+        console.log(val);
+      }
+    },
     methods: {
       getCourse() {
+        let type = this.$route.query.tpye;
         this.$get(`/course/list?pageNum=${this.pageNum}&pageSize=${this.pageSize}`,
           {},
           res => {
            if (res) {
              this.pageNum += 10;
-             this.courseList = this.courseList.concat(res.data.data.gengduo);
-             this.loading = false;
-             if (res.data.data.gengduo.length < 10) {
-               this.finished = true;
+             if (type === '推荐课程') {
+               this.courseList = this.courseList.concat(res.data.data.tuijian);
+               if (res.data.data.tuijian.length < 10) {
+                 this.finished = true;
+               }
+             } else {
+               this.courseList = this.courseList.concat(res.data.data.gengduo);
+               if (res.data.data.gengduo.length < 10) {
+                 this.finished = true;
+               }
              }
+
+             this.loading = false;
+
            }else {
              this.finished = true;
              this.loading = false;
