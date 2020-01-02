@@ -39,7 +39,12 @@
       }
     },
     created() {
-
+      this.$root.$on('on-change-course-type',data => {
+        this.pageNum = 0;
+        this.courseList = [];
+        this.finished = false;
+        this.type  = data;
+      })
     },
     watch:{
       type(val) {
@@ -48,7 +53,7 @@
     },
     methods: {
       getCourse() {
-        let type = this.$route.query.tpye;
+        let type = this.type;
         this.$get(`/course/list?pageNum=${this.pageNum}&pageSize=${this.pageSize}`,
           {},
           res => {
@@ -119,6 +124,7 @@
       margin-top: 6px;
 
       .course-msg {
+        text-align: left;
         position: absolute;
         font-size: 11px;
         bottom: 8px;

@@ -93,6 +93,7 @@
         )
       },
       toMore(type) {
+        this.$root.$emit('on-change-course-type',type);
         this.$router.push({path: '/moreCourse',query:{type:type}});
       },
     }
