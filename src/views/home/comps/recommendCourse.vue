@@ -71,7 +71,7 @@
     methods: {
       getCourse() {
         this.$get(
-          `/course/list?pageNum=${this.pageNum}&pageSize=5`,
+          `/course/list?pageNum=${this.pageNum}&pageSize=3`,
           {
           },
           res => {
@@ -106,7 +106,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 15px;
+      padding:  15px;
 
       .tab_left {
         display: flex;
@@ -120,6 +120,7 @@
         span {
           display: inline-block;
           margin-left: 5px;
+          font-weight: bold;
         }
       }
       .tab_right{
@@ -128,8 +129,10 @@
           height: 11px;
         }
         span{
-          font-size: 14px;
-          color: #999999;
+          font-size: 16px;
+          color: #323233;
+          position: relative;
+          top: -1px;
         }
       }
 

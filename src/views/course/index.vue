@@ -187,14 +187,14 @@
   @media screen and (max-width: 320px){
     .card{
       width: 88%;
-      height: 94px;
-      margin:10px auto 0;
+      height: 130px;
+      margin:15px auto 0;
       position: relative;
       left: 10px;
       border-radius: 5px;
       overflow: hidden;
       .card-num{
-        font-size: 10px;
+        font-size: 16px;
         color: #ffffff;
         position: absolute;
         bottom: 2px;
@@ -205,13 +205,13 @@
   @media screen and (min-width: 321px) and (max-width: 413px){
     .card{
       width: 92%;
-      height: 111px;
-      margin: 10px auto 0;
+      height: 150px;
+      margin: 15px auto 0;
       position: relative;
       border-radius: 7px;
       overflow: hidden;
       .card-num{
-        font-size: 10px;
+        font-size: 16px;
         color: #ffffff;
         position: absolute;
         bottom: 2px;
@@ -222,17 +222,18 @@
   @media screen and (min-width: 414px){
     .card{
       width: 92%;
-      height: 122px;
-      margin: 10px auto 0;
+      height: 160px;
+      margin: 15px auto 0;
       position: relative;
       border-radius: 9px;
       overflow: hidden;
       .card-num{
-        font-size: 10px;
+        font-size: 16px;
         color: #ffffff;
         position: absolute;
         bottom: 2px;
         left: 2px;
+        font-weight: bold;
       }
     }
   }

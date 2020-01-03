@@ -2,12 +2,16 @@
     <div class="about">
       <img :src="info.backgroundMap" alt="" width="100%" style="display: block">
       <van-cell-group>
-        <van-cell :title="'电话：'+info.mobile"/>
+        <van-cell >
+          <template slot="title">
+            电话：<a :href="'tel:'+info.mobile" style="color: #323233">{{info.mobile}}</a>
+          </template>
+        </van-cell>
         <van-cell :title="'邮箱：'+info.email"/>
         <van-cell :title="'地址：'+info.address"/>
       </van-cell-group>
       <div style="height: 10px;background: #F2F2F2"></div>
-      <div id="container"></div>
+      <div id="container" @click="toMap"></div>
     </div>
 </template>
 
@@ -47,7 +51,10 @@
               })
               map.add(marker);
             })
-          }
+          },
+        toMap(){
+            window.location.href = `https://uri.amap.com/marker?position=${this.info.lon},${this.info.lat}&name=${this.info.address}`
+        }
       }
     }
 </script>

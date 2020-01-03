@@ -59,7 +59,7 @@
           label="其他资料："
           type="textarea"
         />
-        <p style="font-size: 12px;padding:10px 5px 50px"><span style="color: #EF4F26">* </span>学员必须保证以上资料真实无误，如因虚报导致的后果，由学员自 行负责。</p>
+        <p style="font-size: 12px;padding:10px 5px 50px"><span style="color: #EF4F26">* </span>学员必须保证以上资料真实无误，如因虚报导致的后果，由学员自行负责</p>
       </van-cell-group>
 
       <van-button type="primary" size="large" @click="submit">提交报名</van-button>

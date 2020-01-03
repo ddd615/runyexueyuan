@@ -77,7 +77,7 @@
   height: 42px;
 
   .nav_left{
-    margin-left: 15px;
+    margin-left: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -105,7 +105,7 @@
     }
   }
   .nav_right{
-    margin-right: 15px;
+    margin-right: 10px;
     position: relative;
     img{
       width: 14.5px;

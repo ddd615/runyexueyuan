@@ -24,10 +24,10 @@
       data(){
           return{
             size:'cover',
-            firstBg:require('../../assets/images/mileage_third.png'),
-            secondBg:require('../../assets/images/mileage_second.png'),
-            thirdBg:require('../../assets/images/mileage_first.png'),
-            fourthBg:require('../../assets/images/mileage_fourth.png'),
+            firstBg:require('../../assets/images/mileage_third1.png'),
+            secondBg:require('../../assets/images/mileage_second1.png'),
+            thirdBg:require('../../assets/images/mileage_first1.png'),
+            fourthBg:require('../../assets/images/mileage_fourth1.png'),
             mileageList:[],
             firstMileage:[
               {
