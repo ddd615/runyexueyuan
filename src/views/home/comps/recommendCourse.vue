@@ -17,7 +17,7 @@
 <!--      @load="onLoad"-->
 <!--    >-->
       <router-link tag="div" :to="{path:'/course/detail/',query:{id:item.id}}" class="course-list" v-for="item in courseList">
-        <van-image :src="item.mainPic" fit="cover" alt=""/>
+        <van-image :src="item.logo" fit="cover" alt=""/>
         <div class="course-msg">
           <p>{{item.name}}</p>
           <p>编号：{{item.id}}</p>
@@ -40,7 +40,7 @@
     <!--      @load="onLoad"-->
     <!--    >-->
     <router-link tag="div" :to="{path:'/course/detail/',query:{id:item.id}}" class="course-list" v-for="item in recentCourseList">
-      <van-image :src="item.mainPic" fit="cover" alt=""/>
+      <van-image :src="item.logo" fit="cover" alt=""/>
       <div class="course-msg">
         <p>{{item.name}}</p>
         <p>编号：{{item.id}}</p>

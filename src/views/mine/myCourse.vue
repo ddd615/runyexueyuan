@@ -11,7 +11,7 @@
           >
             <div class="card" v-for="item in courseList">
               <router-link tag="div" :to="{path:'/course/detail/',query:{id:item.courseId,type:'mine'}}" class="card-img">
-                <img :src="item.mainPic" alt="" width="100%" height="100%">
+                <img :src="item.logo" alt="" width="100%" height="100%">
                 <div class="card-num">
                   <p>{{item.courseName}}</p>
                   <p>编号：{{item.courseId}}</p>
@@ -19,8 +19,8 @@
               </router-link>
               <div class="card-button">
                 <div class="no-sign-in">
-                  <van-button @click.stop="changeStatus(1,item)">签到</van-button>
-                  <van-button @click.stop="changeStatus(0,item)">请假</van-button>
+                  <van-button @click.stop="changeStatus(1,item)" :disabled="list.indexOf(item.courseId) >= 0">签到</van-button>
+                  <van-button @click.stop="changeStatus(0,item)" :disabled="list.indexOf(item.courseId) >= 0">请假</van-button>
                 </div>
               </div>
             </div>
@@ -39,7 +39,7 @@
         >
           <router-link tag="div" :to="{path:'/course/detail/',query:{id:item.courseId,type:'mine'}}" class="card"  v-for="(item,index) in courseList">
             <div class="card-img">
-              <img :src="item.mainPic" alt="" width="100%" height="100%">
+              <img :src="item.logo" alt="" width="100%" height="100%">
               <div class="card-num">
                 <p>{{item.courseName}}</p>
                 <p>编号：{{item.id}}</p>
@@ -67,7 +67,7 @@
         >
           <router-link tag="div" :to="{path:'/course/detail/',query:{id:item.courseId,type:'mine'}}" class="card" v-for="(item,index) in courseList">
             <div class="card-img">
-              <img :src="item.mainPic" alt="" width="100%" height="100%">
+              <img :src="item.logo" alt="" width="100%" height="100%">
               <div class="card-num">
                 <p>{{item.courseName}}</p>
                 <p>编号：{{item.courseId}}</p>
@@ -94,7 +94,7 @@
         >
       <router-link tag="div" :to="{path:'/course/detail/',query:{id:item.courseId,type:'mine'}}" class="card" v-for="item in courseList">
         <div class="card-img">
-          <img :src="item.mainPic" alt="" width="100%" height="100%">
+          <img :src="item.logo" alt="" width="100%" height="100%">
           <div class="card-num">
             <p>{{item.courseName}}</p>
             <p>编号：{{item.courseId}}</p>
@@ -127,11 +127,13 @@
             isLoading:false,
             loading:false,
             finished:false,
-            address:''
+            address:'',
+            list:[]
           }
       },
       created(){
         this.getMyCourse();
+        this.getAttendanceList();
       },
       mounted(){
         let that = this;
@@ -290,6 +292,19 @@
               }
             })
           })
+        },
+        getAttendanceList(){
+            let user = localStorage.getItem('runye_user');
+            if (user) {
+              this.$get(`/attendance/list?memberId=${JSON.parse(user).memberId}&pageNumber=1&pageSize=100`,{},res =>{
+                if (res) {
+                  this.list = res.data.data.list.map(s => s.courseId);
+
+                }else {
+
+                }
+              })
+            }
         }
       }
     }
@@ -300,7 +315,7 @@
     width: 92%;
     background: #ffffff;
     margin: 20px auto 0;
-    border: 1px solid #F2F2F2;
+    border: 1px solid #999999;
     border-radius: 10px;
     overflow: hidden;
     @media screen and (max-width: 320px) {
@@ -340,7 +355,7 @@
           height: 44px;
           line-height: 44px;
           &:first-child{
-            border-right: 1px solid #F2F2F2;
+            border-right: 1px solid #999999;
           }
         }
       }

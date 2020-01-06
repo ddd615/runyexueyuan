@@ -15,7 +15,7 @@
     >
       <router-link tag="div" :to="{path:'/course/detail/',query:{id:item.id}}" class="course-list"
                    v-for="item in courseList">
-        <img :src="item.mainPic" alt="">
+        <img :src="item.logo" alt="">
         <div class="course-msg">
           <p>{{item.name}}</p>
           <p>编号：{{item.id}}</p>
