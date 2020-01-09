@@ -1,6 +1,7 @@
 <template>
   <div class="detail">
-
+    <img :src="course.logo" alt="" width="100%">
+    <van-button type="danger" size="large" @click="toPage" v-if="!type">立即报名</van-button>
     <p style="padding: 8px 17px">{{course.name}}</p>
     <div style="height: 10px;background-color: #F2F2F2"></div>
     <van-tabs v-model="active" title-active-color="#0085FF" title-inactive-color="#333333" line-width="0">
@@ -42,12 +43,12 @@
         </div>
       </van-tab>
       <van-tab title="课程安排">
+        <p style="padding: 5px;font-size: 14px;">课程表:</p>
+        <img :src="course.mainPic" alt="" width="100%">
         <div class="rich-text" v-html="course.content"></div>
       </van-tab>
     </van-tabs>
-    <p style="padding: 5px;font-size: 14px;">课程表:</p>
-    <img :src="course.mainPic" alt="" width="100%">
-    <van-button type="danger" size="large" @click="toPage" v-if="!type">立即报名</van-button>
+
   </div>
 </template>
 
@@ -125,6 +126,7 @@
     bottom: 0;
     background: #EF4F26;
     border: none;
+    z-index: 2;
   }
 
   .detail {
@@ -154,4 +156,5 @@
   .rich-text /deep/ img {
     max-width: 100%;
   }
+
 </style>

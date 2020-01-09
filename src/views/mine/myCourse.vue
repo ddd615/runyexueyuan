@@ -371,4 +371,7 @@
       }
     }
    }
+  .van-button--disabled {
+    background: #99999961;
+  }
 </style>

@@ -126,10 +126,11 @@
       .course-msg {
         text-align: left;
         position: absolute;
-        font-size: 11px;
+        font-size: 16px;
         bottom: 8px;
         color: #ffffff;
         left: 6%;
+        font-weight: bold;
       }
 
       @media screen and (min-width: 330px) and (max-width: 413px) {

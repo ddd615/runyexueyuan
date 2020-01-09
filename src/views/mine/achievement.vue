@@ -59,21 +59,23 @@
               this.disabled = true;
               let num = 0;
               this.gradeList = res.data.data.list;
-              let id ;
+              let id = 0;
               let arr = [];
               res.data.data.list.map((s,i) => {
                 if (s.courseId) {
-                  if (!id) {
+                  if (!id || id !== s.courseId) {
                     id = s.courseId;
                   }
+                  console.log(id);
                   let obj = {
-                    courseId : id,
+                    courseId : s.courseId,
                     courseName: s.courseName,
                     isQualified:s.isQualified,
                     testTime : s.testTime,
                     subjectList:[],
                     explain:s.explain
                   };
+                  console.log(obj);
                   res.data.data.list.map((item,index) => {
                     if (id === item.courseId) {
                       obj.subjectList.push({
@@ -88,6 +90,7 @@
                   arr.push(obj);
                 }
               });
+              console.log(arr);
               this.gradeList = arr;
             }else {
               this.$toast('暂无成绩');
@@ -101,6 +104,8 @@
             this.$get(`/member/info/${JSON.parse(user).memberId}`,{},res => {
               if (res) {
                 this.userInfo = res.data.data;
+                this.userInfo.name = 'ccccf';
+                this.userInfo.identity = '441825199602211820'
               }
             })
           }
