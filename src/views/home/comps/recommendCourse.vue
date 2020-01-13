@@ -106,7 +106,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding:  15px;
+      padding:  15px 15px 0;
 
       .tab_left {
         display: flex;
@@ -143,7 +143,7 @@
     .course-list {
       text-align: center;
       position: relative;
-      margin-top: 5px;
+      margin-top: 10px;
       .course-msg {
         position: absolute;
         font-size: 16px;

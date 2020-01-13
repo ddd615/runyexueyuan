@@ -74,7 +74,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 42px;
+  height: 54px;
 
   .nav_left{
     margin-left: 10px;
@@ -82,11 +82,11 @@
     flex-direction: column;
     align-items: center;
     img{
-      width: 18px;
-      height: 17.5px;
+      width: 20px;
+      height: 19.5px;
     }
     p{
-      font-size: 9.5px;
+      font-size: 10.5px;
       color: #333333;
     }
   }
@@ -94,12 +94,12 @@
     display: flex;
     align-items: center;
     img{
-      width: 26px;
-      height: 22.5px;
+      width: 28px;
+      height: 24.5px;
       margin-right: 5px;
     }
     span{
-      font-size: 20px;
+      font-size: 24px;
       font-family: 'fzcqjt';
       color: #0085FF;
     }
@@ -108,8 +108,8 @@
     margin-right: 10px;
     position: relative;
     img{
-      width: 14.5px;
-      height: 17.5px;
+      width: 18.5px;
+      height: 20.5px;
     }
     .red-point{
       width: 5px;

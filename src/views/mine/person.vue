@@ -116,7 +116,12 @@
             :disabled="disabled"
             input-align="right"
           />
-          <van-cell title="电子照片（白底彩照）：">
+          <van-cell>
+            <template slot="title">
+              <div style="font-size: 12px;">
+                <p style="font-size: 14px;">电子照片：</p>(照片要求：白底免冠证件照(宽度：413像素，高度：626像素))
+              </div>
+            </template>
             <template>
               <van-uploader :after-read="afterRead" :disabled="disabled">
                 <img src="../../assets/images/add_photo.png" alt="" v-if="!hasPic">
