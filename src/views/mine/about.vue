@@ -2,9 +2,14 @@
     <div class="about">
       <img :src="info.backgroundMap" alt="" width="100%" style="display: block">
       <van-cell-group>
-        <van-cell >
+        <van-cell v-for="item in personList">
           <template slot="title">
-            电话：<a :href="'tel:'+info.mobile" style="color: #323233">{{info.mobile}}</a>
+            <span>{{item.name}}</span>：<a :href="'tel:'+item.phone" style="color: #323233">{{item.phone}}</a>
+          </template>
+        </van-cell>
+        <van-cell v-if="info.landline">
+          <template slot="title">
+            <span>座机</span>：<a :href="'tel:'+info.landline" style="color: #323233">{{info.landline}}</a>
           </template>
         </van-cell>
         <van-cell :title="'邮箱：'+info.email"/>
@@ -24,7 +29,9 @@
               mobile:'',
               email:'',
               address:'',
-            }
+
+            },
+            personList:[]
           }
       },
       created() {
@@ -38,7 +45,15 @@
           getInfo(){
             this.$get('/system/info/1',{},res => {
               this.info = res.data.data;
-              console.log(this.info);
+              let phoneList = this.info.mobile.split(',');
+              if (phoneList) {
+                this.personList = this.info.ontacts.split(',').map((s,i) => {
+                  return {
+                    name: s,
+                    phone:phoneList[i]
+                  }
+                });
+              }
               console.log(parseFloat(this.info.lat));
               console.log(parseFloat(this.info.lon));
               var map = new AMap.Map('container', {
