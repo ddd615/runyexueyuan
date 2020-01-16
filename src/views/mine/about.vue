@@ -2,7 +2,7 @@
     <div class="about">
       <img :src="info.backgroundMap" alt="" width="100%" style="display: block">
       <van-cell-group>
-        <van-cell v-for="item in personList">
+        <van-cell v-for="item in personList" v-if="item.name">
           <template slot="title">
             <span>{{item.name}}</span>：<a :href="'tel:'+item.phone" style="color: #323233">{{item.phone}}</a>
           </template>

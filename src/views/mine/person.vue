@@ -187,6 +187,12 @@
               input-align="right"
               :disabled="certaficationEdit"
             />
+            <van-field
+              v-model="certification.ertificateNo"
+              label="证书编号："
+              input-align="right"
+              :disabled="certaficationEdit"
+            />
             <van-cell title="证书上传：">
               <template>
                 <van-uploader :after-read="certificationUpload" :disabled="certaficationEdit">
@@ -647,6 +653,12 @@
         let user = localStorage.getItem('runye_user');
         if (user) {
           this.certification.memberId = JSON.parse(user).memberId;
+          const reg = /^[0-9a-zA-Z]+$/;
+          console.log(this.certification.ertificateNo);
+          if (!reg.test(this.certification.ertificateNo)) {
+            this.$toast('证书编号只能包含字母和数字');
+            return;
+          }
           if (this.certification.id) {
             this.$post('/certificate/update',
               {
@@ -654,6 +666,7 @@
                 term: this.changeTime(this.startTime) + ',' + this.changeTime(this.endTime),
                 memberId: JSON.parse(user).memberId,
                 mainPic: this.certification.mainPic,
+                ertificateNo:this.certification.ertificateNo,
                 name: this.certification.name,
                 id: this.certification.id,
               }, res => {
@@ -671,6 +684,7 @@
                 expireTime: this.changeTime(this.outDate) + ' 00:00:00',
                 term: this.changeTime(this.startTime) + ',' + this.changeTime(this.endTime),
                 memberId: JSON.parse(user).memberId,
+                ertificateNo:this.certification.ertificateNo,
                 mainPic: this.certification.mainPic,
                 name: this.certification.name
               }, res => {
@@ -708,6 +722,7 @@
             this.certification.name = info.name;
             this.certification.mainPic = info.mainPic;
             this.certification.id = info.id;
+            this.certification.ertificateNo = info.ertificateNo;
             this.outDate = info.expireTime;
             this.startTime = info.term.split(',')[0] || '';
             this.endTime = info.term.split(',')[0] || '';
