@@ -128,7 +128,7 @@
         position: absolute;
         font-size: 16px;
         bottom: 8px;
-        color: #ffffff;
+        color: #333333;
         left: 6%;
         font-weight: bold;
       }

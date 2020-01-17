@@ -195,7 +195,7 @@
       overflow: hidden;
       .card-num{
         font-size: 16px;
-        color: #ffffff;
+        color: #333333;
         position: absolute;
         bottom: 2px;
         left: 2px;
@@ -212,7 +212,7 @@
       overflow: hidden;
       .card-num{
         font-size: 16px;
-        color: #ffffff;
+        color: #333333;
         position: absolute;
         bottom: 2px;
         left: 2px;
@@ -229,7 +229,7 @@
       overflow: hidden;
       .card-num{
         font-size: 16px;
-        color: #ffffff;
+        color: #333333;
         position: absolute;
         bottom: 2px;
         left: 2px;

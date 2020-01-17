@@ -337,7 +337,7 @@
       position: relative;
       .card-num{
         font-size: 12px;
-        color: #ffffff;
+        color: #333333;
         position: absolute;
         bottom: 5px;
         left: 5px;
